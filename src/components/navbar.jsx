@@ -13,7 +13,7 @@ const Navbar = () => {
     <nav className='bg-slate-50 '>
       <div className='flex justify-between items-center w-11/12 mx-auto p-4'>
         <div className='flex'>
-          <h1 className='text-4xl w-32 p-1 border-r-2 border-slate-300 text-rose-500 hover:text-gray-400 cursor-pointer'>
+          <h1 className='text-4xl w-32 p-1 border-r-2 border-slate-300 text-red-600 hover:text-gray-400 cursor-pointer'>
             FASTX
           </h1>
           <div className='ml-5'><img  src={busLogo} alt='bus.svg' className='w-14 '></img></div>

@@ -45,7 +45,7 @@ const Offers = () => {
 
 
 	return (
-		<div className='bg-white absolute -bottom-36 left-28 rounded-3xl w-5/6 shadow-2xl  border-black p-5  ' >
+		<div className='bg-white absolute -bottom-24 left-28 rounded-3xl w-5/6 shadow-2xl  border-black p-5  ' >
 			{/* heading div	 */}
 			<div className='flex justify-between items-center m-3  ' >
 				<h1 className='font-bold text-2xl ' >TRENDING OFFERS</h1>

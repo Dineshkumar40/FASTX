@@ -7,7 +7,7 @@ import time from '../assets/time.svg'
 
 const Promo = () => {
   return (
-    <div className=' w-5/6 mx-auto m-80 relative'   >
+    <div className=' w-5/6 mx-auto mt-80 mb-10 relative'   >
       <div className='rounded-3xl   '>
         <img src={Proim} alt='promo' />
       </div>

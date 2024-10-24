@@ -2,19 +2,22 @@ import React, { useRef, useState } from 'react';
 import busImage from '../assets/ebus.jpg';
 import Datepicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import {useNavigate} from 'react-router-dom';
 
 const Section = () => {
     const inputFocusOne = useRef(null);
     const inputFocusTwo = useRef(null);
     const dateHook = useRef(null);
     const [selectedDate, setSelectedDate] = useState(null);
+    const navigate = useNavigate();
+
 
     const handleSearch = () => {
         const fromLocation = inputFocusOne.current.value;
         const toLocation = inputFocusTwo.current.value;
-        const travelDate = selectedDate; // Use the state for the date
-        // Implement the search logic here, e.g., navigate to results or call API
-        console.log({ fromLocation, toLocation, travelDate });
+        const travelDate = selectedDate;
+        navigate(`/Buses/${fromLocation}/${toLocation}/${travelDate}`);
+        // console.log({ fromLocation, toLocation, travelDate });
     };
 
     return (
