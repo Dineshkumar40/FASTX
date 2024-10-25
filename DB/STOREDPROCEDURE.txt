@@ -1,0 +1,94 @@
+           STOREDPROCEDURE
+------------------------------------------
+1. GetAllUsers:
+CREATE PROCEDURE [dbo].[GetAllUsers]
+AS
+BEGIN 
+SELECT u.Id, u.FName,u.LName,u.Age,u.Gender,r.RoleType FROM Users As u INNER JOIN roles AS r on u.roleid = r.id;
+END
+GO
+
+2. CreateOrUpdate:
+CREATE PROCEDURE [dbo].[CreateOrUpdate] 
+@id nvarchar(255) , @fName nvarchar (255) , @lName nvarchar (255) , @age int ,
+@gender nvarchar(255), @roleType nvarchar(255) 
+
+AS 
+declare @roleId nvarchar(255) 
+select @roleId = Id from roles where roletype =  @roleType;
+
+IF NOT EXISTS (select Id from Users where Id = @Id)
+begin
+Insert into Users values (@id , @fName , @lName , @age , @gender , @roleId )
+end 
+
+else begin 
+update Users set FName = @fName , LName = @lName , Age = @age , gender = @gender , roleid = @roleId
+where Id = @Id
+end
+GO
+
+3.DeleteUser:
+create procedure [dbo].[DeleteUser] 
+@id nvarchar(255)
+AS 
+BEGIN 
+delete from Users where Id = @id;
+end 
+GO
+
+4.SearchBuses:
+CREATE PROCEDURE [dbo].[SearchBuses]
+    @FromLocation VARCHAR(100),
+    @ToLocation VARCHAR(100),
+    @TravelDays VARCHAR(100), 
+    @busType VARCHAR(MAX) = NULL,
+    @DepartureTimeSlots varchar(100),
+    @ArrivalTimeSlots varchar(100)
+AS
+BEGIN
+    SELECT 
+        B.busId, 
+        B.busName, 
+        B.BusNumber, 
+        B.BusType, 
+        B.TotalSeats, 
+        B.AvailableSeats,  
+        B.DepartureTime, 
+        B.ArrivalTime, 
+        B.Fare,
+        R.RouteName,              
+        R.StartLocation,    
+        R.EndLocation        
+    FROM  
+        BusInfo B
+    INNER JOIN 
+        Routes R ON B.busRouteID = R.RouteId  
+    WHERE 
+        R.StartLocation = @FromLocation 
+        AND R.EndLocation = @ToLocation 
+        AND B.TravelDays LIKE '%' + @TravelDays + '%'   
+AND (
+            @busType IS NULL OR CHARINDEX(B.BusType, @busType) > 0 
+        )
+        AND (
+            @DepartureTimeSlots IS NULL OR  
+            (
+                (CHARINDEX('Before6AM', @DepartureTimeSlots) > 0 AND  B.DepartureTime < '06:00:00') OR
+                (CHARINDEX('From6AMTo12PM', @DepartureTimeSlots) > 0 AND  B.DepartureTime >= '06:00:00' AND  B.DepartureTime < '12:00:00') OR
+                (CHARINDEX('From12PMTo6PM', @DepartureTimeSlots) > 0 AND  B.DepartureTime >= '12:00:00' AND  B.DepartureTime < '18:00:00')
+            )
+        )
+        AND (
+            @ArrivalTimeSlots IS NULL OR  
+            (
+                (CHARINDEX('ArrivalBefore6AM', @ArrivalTimeSlots) > 0 AND B.ArrivalTime < '06:00:00') OR
+                (CHARINDEX('ArrivalFrom6AMTo12PM', @ArrivalTimeSlots) > 0 AND B.ArrivalTime >= '06:00:00' AND B.ArrivalTime < '12:00:00') OR
+                (CHARINDEX('ArrivalFrom12PMTo6PM', @ArrivalTimeSlots) > 0 AND B.ArrivalTime >= '12:00:00' AND B.ArrivalTime < '18:00:00')
+            )
+        );
+END;
+GO
+
+
+

@@ -1,0 +1,32 @@
+            TABLES 
+------------------------------------
+USER TABLE:
+[Id] [nvarchar](255) NOT NULL,
+[FName] [nvarchar](255) NOT NULL,
+[LName] [nvarchar](255) NULL,
+[Age] [int] NULL,
+[gender] [nvarchar](255) NULL,
+[roleid] [nvarchar](255) NULL
+
+ROUTE TABLE: 
+[RouteId] [int] IDENTITY(1,1) NOT NULL,
+[RouteName] [varchar](100) NOT NULL,
+[StartLocation] [varchar](100) NOT NULL,
+[EndLocation] [varchar](100) NOT NULL
+
+ROLE TABLE:
+[Id] [nvarchar](255) NOT NULL,
+[RoleType] [varchar](255) NOT NULL,
+
+BUSINFO TABLE:
+[busId] [varchar](100) NOT NULL,
+[busName] [varchar](100) NOT NULL,
+[busNumber] [varchar](100) NOT NULL,
+[busType] [varchar](100) NOT NULL,
+[totalSeats] [int] NOT NULL,
+[availableSeats] [int] NOT NULL,
+[departureTime] [varchar](100) NOT NULL,
+[arrivalTime] [varchar](100) NOT NULL,
+[fare] [int] NOT NULL,
+[busRouteId] [int] NOT NULL,
+[TravelDays] [varchar](100) NOT NULL

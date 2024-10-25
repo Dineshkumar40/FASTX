@@ -1,6 +1,6 @@
 import React from 'react'
 
-function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusType, FromLocation, ToLocation }) {
+function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusType, FromLocation, ToLocation,FirstBus,LastBus }) {
     return (
         <>
             <div className="border hover:border-red-200 transition-shadow duration-300 hover:shadow-xl rounded-2xl p-4 mb-4 group relative">
