@@ -11,3 +11,6 @@
     -ms-overflow-style: none; /* For Internet Explorer and Edge */
     scrollbar-width: none; /* For Firefox */
   }
+  input[type='checkbox']:checked {
+    accent-color: #dc2626; /* Tailwind red-600 color hex */
+}

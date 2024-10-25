@@ -31,6 +31,8 @@ function BusList() {
 
 
 
+
+
     // Get selected bus types
     const getBusTypes = useCallback(() => {
         const types = [];
@@ -149,20 +151,20 @@ function BusList() {
                             <h3 className="font-medium text-lg mb-3">BUS TYPES</h3>
                             <div className="space-y-3">
                                 <label className="flex items-center space-x-3">
-                                    <input type="checkbox" checked={seater} onChange={(e) => setSeater(e.target.checked)} className="text-indigo-600 border-gray-300 focus:ring-indigo-500" />
-                                    <span className="font-thin">Seater</span>
+                                    <input type="checkbox" checked={seater} onChange={(e) => setSeater(e.target.checked)} className="text-red-600 border-gray-300 focus:ring-red-600" />
+                                    <span className="font-thin cursor-pointer hover:opacity-35">Seater</span>
                                 </label>
                                 <label className="flex items-center space-x-3">
-                                    <input type="checkbox" checked={sleeper} onChange={(e) => setSleeper(e.target.checked)} className="text-indigo-600 border-gray-300 focus:ring-indigo-500" />
-                                    <span className="font-thin">Sleeper</span>
+                                    <input type="checkbox" checked={sleeper} onChange={(e) => setSleeper(e.target.checked)} className="text-red-600 border-gray-300 focus:ring-red-500" />
+                                    <span className="font-thin cursor-pointer hover:opacity-35">Sleeper</span>
                                 </label>
                                 <label className="flex items-center space-x-3">
-                                    <input type="checkbox" checked={ac} onChange={(e) => setAc(e.target.checked)} className="text-indigo-600 border-gray-300 focus:ring-indigo-500" />
-                                    <span className="font-thin">AC</span>
+                                    <input type="checkbox" checked={ac} onChange={(e) => setAc(e.target.checked)} className="text-red-600 border-gray-300 focus:ring-red-500" />
+                                    <span className="font-thin cursor-pointer hover:opacity-35">AC</span>
                                 </label>
                                 <label className="flex items-center space-x-3">
-                                    <input type="checkbox" checked={nonAc} onChange={(e) => setNonAc(e.target.checked)} className="text-indigo-600 border-gray-300 focus:ring-indigo-500" />
-                                    <span className="font-thin">Non-AC</span>
+                                    <input type="checkbox" checked={nonAc} onChange={(e) => setNonAc(e.target.checked)} className="text-red-600 border-gray-300 focus:ring-red-500" />
+                                    <span className="font-thin cursor-pointer hover:opacity-35">Non-AC</span>
                                 </label>
                             </div>
                         </div>
@@ -172,20 +174,20 @@ function BusList() {
                             <h3 className="font-medium text-lg mb-2">DEPARTURE TIME</h3>
                             <div className="space-y-3">
                                 <label className="flex items-center space-x-3">
-                                    <input type="checkbox" checked={before6AM} onChange={(e) => setBefore6AM(e.target.checked)} className="text-indigo-600 border-gray-300 focus:ring-indigo-500" />
-                                    <span className="font-thin">Before 6 am</span>
+                                    <input type="checkbox" checked={before6AM} onChange={(e) => setBefore6AM(e.target.checked)} className="text-red-600 border-gray-300 focus:ring-red-500" />
+                                    <span className="font-thin cursor-pointer hover:opacity-35">Before 6 am</span>
                                 </label>
                                 <label className="flex items-center space-x-3">
-                                    <input type="checkbox" checked={from6AMTo12PM} onChange={(e) => setFrom6AMTo12PM(e.target.checked)} className="text-indigo-600 border-gray-300 focus:ring-indigo-500" />
-                                    <span className="font-thin">6 am to 12 pm</span>
+                                    <input type="checkbox" checked={from6AMTo12PM} onChange={(e) => setFrom6AMTo12PM(e.target.checked)} className="text-red-600 border-gray-300 focus:ring-red-500" />
+                                    <span className="font-thin cursor-pointer hover:opacity-35">6 am to 12 pm</span>
                                 </label>
                                 <label className="flex items-center space-x-3">
-                                    <input type="checkbox" checked={from12PMTo6PM} onChange={(e) => setFrom12PMTo6PM(e.target.checked)} className="text-indigo-600 border-gray-300 focus:ring-indigo-500" />
-                                    <span className="font-thin">12 pm to 6 pm</span>
+                                    <input type="checkbox" checked={from12PMTo6PM} onChange={(e) => setFrom12PMTo6PM(e.target.checked)} className="text-red-600 border-gray-300 focus:ring-red-500" />
+                                    <span className="font-thin cursor-pointer hover:opacity-35">12 pm to 6 pm</span>
                                 </label>
                                 <label className="flex items-center space-x-3">
-                                    <input type="checkbox" checked={after6PM} onChange={(e) => setAfter6PM(e.target.checked)} className="text-indigo-600 border-gray-300 focus:ring-indigo-500" />
-                                    <span className="font-thin">After 6 pm</span>
+                                    <input type="checkbox" checked={after6PM} onChange={(e) => setAfter6PM(e.target.checked)} className="text-red-600 border-gray-300 focus:ring-red-500" />
+                                    <span className="font-thin cursor-pointer hover:opacity-35">After 6 pm</span>
                                 </label>
                             </div>
                         </div>
@@ -195,20 +197,20 @@ function BusList() {
                             <h3 className="font-medium text-lg mb-5">ARRIVAL TIME</h3>
                             <div className="space-y-3">
                                 <label className="flex items-center space-x-3">
-                                    <input type="checkbox" checked={arrivalBefore6AM} onChange={(e) => setArrivalBefore6AM(e.target.checked)} className="text-indigo-600 border-gray-300 focus:ring-indigo-500" />
-                                    <span className="font-thin">Before 6 am</span>
+                                    <input type="checkbox" checked={arrivalBefore6AM} onChange={(e) => setArrivalBefore6AM(e.target.checked)} className="text-red-600 border-gray-300 focus:ring-red-500" />
+                                    <span className="font-thin cursor-pointer hover:opacity-35 ">Before 6 am</span>
                                 </label>
                                 <label className="flex items-center space-x-3">
-                                    <input type="checkbox" checked={arrivalFrom6AMTo12PM} onChange={(e) => setArrivalFrom6AMTo12PM(e.target.checked)} className="text-indigo-600 border-gray-300 focus:ring-indigo-500" />
-                                    <span className="font-thin">6 am to 12 pm</span>
+                                    <input type="checkbox" checked={arrivalFrom6AMTo12PM} onChange={(e) => setArrivalFrom6AMTo12PM(e.target.checked)} className="text-red-600 border-gray-300 focus:ring-red-500" />
+                                    <span className="font-thin cursor-pointer hover:opacity-35 ">6 am to 12 pm</span>
                                 </label>
                                 <label className="flex items-center space-x-3">
-                                    <input type="checkbox" checked={arrivalFrom12PMTo6PM} onChange={(e) => setArrivalFrom12PMTo6PM(e.target.checked)} className="text-indigo-600 border-gray-300 focus:ring-indigo-500" />
-                                    <span className="font-thin">12 pm to 6 pm</span>
+                                    <input type="checkbox" checked={arrivalFrom12PMTo6PM} onChange={(e) => setArrivalFrom12PMTo6PM(e.target.checked)} className="text-red-600 border-gray-300 focus:ring-red-500" />
+                                    <span className="font-thin cursor-pointer hover:opacity-35 ">12 pm to 6 pm</span>
                                 </label>
                                 <label className="flex items-center space-x-3">
-                                    <input type="checkbox" checked={arrivalAfter6PM} onChange={(e) => setArrivalAfter6PM(e.target.checked)} className="text-indigo-600 border-gray-300 focus:ring-indigo-500" />
-                                    <span className="font-thin">After 6 pm</span>
+                                    <input type="checkbox" checked={arrivalAfter6PM} onChange={(e) => setArrivalAfter6PM(e.target.checked)} className="text-red-600 border-gray-300 focus:ring-red-500" />
+                                    <span className="font-thin cursor-pointer hover:opacity-35 ">After 6 pm</span>
                                 </label>
                             </div>
                         </div>
@@ -230,10 +232,13 @@ function BusList() {
                                 </div>
                             </div>
                             {buses.map((bus, index) => (
-                                <BusCards key={index} bus={bus} />
+                                <BusCards key={index}  BusName={bus.busName} Departure={bus.departureTime} Duration={bus.totalTime} Arrival={bus.arrivalTime} Fare={bus.fare} SeatsAvailable={bus.availableSeats} BusType={bus.busType} FromLocation={bus.StartLocation} ToLocation={bus.EndLocation} busId={bus.busId} complementory={bus.complementory} />
 
                             ))}
                             <BusCards />
+                            <BusCards />
+                            <BusCards />
+
                         </div>
                     </div>
                 </div>

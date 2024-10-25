@@ -57,9 +57,11 @@ BEGIN
         B.DepartureTime, 
         B.ArrivalTime, 
         B.Fare,
+        B.complementory,
         R.RouteName,              
         R.StartLocation,    
-        R.EndLocation        
+        R.EndLocation,
+        R.totalTime       
     FROM  
         BusInfo B
     INNER JOIN 
