@@ -95,8 +95,8 @@ function BusList() {
     // First and Last Bus
     useEffect(() => {
         if (buses && buses.length > 0) {
-            setFirstBusTime(buses[0].timeSlot);
-            setLastBusTime(buses[buses.length - 1].timeSlot);
+            setFirstBusTime(buses[0].departureTime);
+            setLastBusTime(buses[buses.length - 1].departureTime);
         }
     }, [buses]);
 

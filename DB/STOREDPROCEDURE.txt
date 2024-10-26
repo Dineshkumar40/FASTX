@@ -41,10 +41,10 @@ GO
 CREATE PROCEDURE [dbo].[SearchBuses]
     @FromLocation VARCHAR(100),
     @ToLocation VARCHAR(100),
-    @TravelDays VARCHAR(100), 
+    @travelDays VARCHAR(100), 
     @busType VARCHAR(MAX) = NULL,
-    @DepartureTimeSlots varchar(100),
-    @ArrivalTimeSlots varchar(100)
+    @departureTimeSlots varchar(100),
+    @arrivalTimeSlots varchar(100)
 AS
 BEGIN
     SELECT 
@@ -65,32 +65,149 @@ BEGIN
     FROM  
         BusInfo B
     INNER JOIN 
-        Routes R ON B.busRouteID = R.RouteId  
+        Routes R ON B.RouteID = R.RouteId  
     WHERE 
         R.StartLocation = @FromLocation 
         AND R.EndLocation = @ToLocation 
-        AND B.TravelDays LIKE '%' + @TravelDays + '%'   
+        AND B.TravelDays LIKE '%' + @travelDays + '%'   
 AND (
             @busType IS NULL OR CHARINDEX(B.BusType, @busType) > 0 
         )
         AND (
-            @DepartureTimeSlots IS NULL OR  
+            @departureTimeSlots IS NULL OR  
             (
-                (CHARINDEX('Before6AM', @DepartureTimeSlots) > 0 AND  B.DepartureTime < '06:00:00') OR
-                (CHARINDEX('From6AMTo12PM', @DepartureTimeSlots) > 0 AND  B.DepartureTime >= '06:00:00' AND  B.DepartureTime < '12:00:00') OR
-                (CHARINDEX('From12PMTo6PM', @DepartureTimeSlots) > 0 AND  B.DepartureTime >= '12:00:00' AND  B.DepartureTime < '18:00:00')
+                (CHARINDEX('Before6AM', @DdepartureTimeSlots) > 0 AND  B.DepartureTime >= '06:00:00' AND  B.DepartureTime < '12:00:00') OR
+                (CHARINDEX('From12PMTo6PM', @departureTimeSlots) > 0 AND  B.DepartureTime >= '12:00:00' AND  B.DepartureTime < '18:00:00')
             )
         )
         AND (
-            @ArrivalTimeSlots IS NULL OR  
+            @arrivalTimeSlots IS NULL OR  
             (
-                (CHARINDEX('ArrivalBefore6AM', @ArrivalTimeSlots) > 0 AND B.ArrivalTime < '06:00:00') OR
-                (CHARINDEX('ArrivalFrom6AMTo12PM', @ArrivalTimeSlots) > 0 AND B.ArrivalTime >= '06:00:00' AND B.ArrivalTime < '12:00:00') OR
-                (CHARINDEX('ArrivalFrom12PMTo6PM', @ArrivalTimeSlots) > 0 AND B.ArrivalTime >= '12:00:00' AND B.ArrivalTime < '18:00:00')
+                (CHARINDEX('ArrivalBefore6AM', @arrivalTimeSlots) > 0 AND B.ArrivalTime < '06:00:00') OR
+                (CHARINDEX('ArrivalFrom6AMTo12PM', @arrivalTimeSlots) > 0 AND B.ArrivalTime >= '06:00:00' AND B.ArrivalTime < '12:00:00') OR
+                (CHARINDEX('ArrivalFrom12PMTo6PM', @arrivalTimeSlots) > 0 AND B.ArrivalTime >= '12:00:00' AND B.ArrivalTime < '18:00:00')
             )
         );
 END;
 GO
+
+5. AddOrUpdateBusWithSeats:
+
+CREATE PROCEDURE AddOrUpdateBusWithSeats
+    @busId VARCHAR(100),
+    @busName VARCHAR(100),
+    @busNumber VARCHAR(100),
+    @busType VARCHAR(100),
+    @totalSeats INT,
+    @departureTime Time,
+    @arrivalTime Time,
+    @fare INT,
+    @routeId INT,
+    @travelDays VARCHAR(100),
+    @complementory varchar(100)
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM BusInfo WHERE busId = @busId)
+    BEGIN
+        UPDATE BusInfo
+        SET 
+            BusName = @busName,
+            BusNumber = @busNumber,
+            BusType = @busType,
+            TotalSeats = @totalSeats,
+            AvailableSeats = @totalSeats,
+            DepartureTime = @departureTime,
+            ArrivalTime = @arrivalTime,
+            Fare = @fare,
+            RouteId = @routeId,
+            TravelDays = @travelDays,
+            Complementory = @complementory
+        WHERE BusId = @busId;
+
+        DELETE FROM BusSeats WHERE BusID = @busId;
+
+        DECLARE @seatNum INT = 1;
+        WHILE @seatNum <= @totalSeats
+        BEGIN
+            INSERT INTO BusSeats (SeatID, BusID, SeatNumber, IsAvailable, Price)
+            VALUES (NEWID(), @busId, 'S' + CAST(@seatNum AS VARCHAR), 1, @fare);
+
+            SET @seatNum = @seatNum + 1;
+        END;
+    END
+    ELSE
+    BEGIN
+        INSERT INTO BusInfo (BusId, BusName, BusNumber, BusType, TotalSeats, DepartureTime, ArrivalTime, Fare, RouteId, TravelDays,Complementory)
+        VALUES (@busId, @busName, @busNumber, @busType, @totalSeats, @departureTime, @arrivalTime, @fare, @routeId, @travelDays,@complementory);
+        
+        DECLARE @seatNum INT = 1;
+        WHILE @seatNum <= @totalSeats
+        BEGIN
+            INSERT INTO BusSeats (SeatID, BusID, SeatNumber, IsAvailable, Price)
+            VALUES (NEWID(), @busId, 'S' + CAST(@seatNum AS VARCHAR), @fare);
+
+            SET @seatNum = @seatNum + 1;
+        END;
+    END;
+END;
+
+6. ADDORUPDATE ROUTE:
+
+CREATE PROCEDURE AddOrUpdateRoute
+    @routeId INT = NULL,          
+    @routeName VARCHAR(100),
+    @startLocation VARCHAR(100),
+    @endLocation VARCHAR(100),
+    @totalTime TIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF @routeId IS NOT NULL AND EXISTS (SELECT 1 FROM Routes WHERE RouteId = @routeId)
+    BEGIN
+        UPDATE Routes
+        SET 
+            RouteName = @routeName,
+            StartLocation = @startLocation,
+            EndLocation = @endLocation,
+            TotalTime = @totalTime
+        WHERE RouteId = @routeId;
+    END
+    ELSE
+    BEGIN
+        INSERT INTO Routes (RouteName, StartLocation, EndLocation, TotalTime)
+        VALUES (@routeName, @startLocation, @endLocation, @totalTime);
+    END
+END;
+GO
+
+7.DELETE ROUTE 
+CREATE PROCEDURE DeleteRoute
+    @routeId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DELETE FROM Routes 
+    WHERE RouteId = @routeId;
+END;
+GO
+
+8. DELETE BusInfo
+CREATE PROCEDURE DeleteBusInfo
+    @busId VARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DELETE FROM BusSeats 
+    WHERE BusID = @busId;
+
+    DELETE FROM BusInfo 
+    WHERE BusId = @busId;
+END;
+GO
+
+
 
 
 

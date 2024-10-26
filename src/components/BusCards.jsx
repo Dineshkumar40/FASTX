@@ -1,12 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import BusComplementory from './BusComplementory'; 
+import BusComplementory from './BusComplementory';
 
 function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusType, FromLocation, ToLocation, busId, complementory }) {
     const [isExpanded, setIsExpanded] = useState(false);
     const [seats, setSeats] = useState([]); 
     const [selectedSeats, setSelectedSeats] = useState([]); 
     const [message, setMessage] = useState(''); 
+    const getSeatsString = () => selectedSeats.join(',');
     const sections = complementory ? complementory.split(',') : []; // Split complementory string
 
     // Toggle function for expanding the seat selection
@@ -39,10 +40,12 @@ function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable,
     // Handle seat reservation
     const handleReserveSeats = async () => {
         try {
-            const response = await axios.post(`http://localhost:5000/api/bus/${busId}/reserve`, {
-                seats: selectedSeats,
+            const response = await axios.post(`http://localhost:5000/api/bus/reserve`, {
+                BusId:busId,
+                seats: getSeatsString(),
             });
             setMessage(response.data); // Display confirmation message
+            const totalFare = selectedSeats.length * Fare;
             setSelectedSeats([]); 
         } catch (error) {
             console.error('Error reserving seats:', error);
@@ -95,32 +98,70 @@ function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable,
                 </button>
             </div>
             {isExpanded && (
-                <div className="mt-4 p-4 border-t border-gray-300 transition-all duration-300">
-                    <h2 className="text-xl font-bold mb-4">Select Seats</h2>
-                    <div className="grid grid-cols-5 gap-4">
-                        {seats.map((seat) => (
-                            <div
-                                key={seat.seatNumber}
-                                onClick={() => handleSeatSelect(seat.seatNumber)}
-                                className={`w-12 h-12 cursor-pointer rounded-md
-                  ${seat.isReserved ? 'bg-red-500' : 'bg-green-500'}
-                  ${selectedSeats.includes(seat.seatNumber) ? 'border-4 border-yellow-500' : ''}`}
-                                style={{ pointerEvents: seat.isReserved ? 'none' : 'auto' }} 
-                            >
-                              
-                            </div>
-                        ))}
-                    </div>
-                    <button
-                        onClick={handleReserveSeats}
-                        className="bg-red-600 text-white px-4 py-2 rounded mt-4 cursor-pointer"
-                        disabled={selectedSeats.length === 0}
+    <div className="mt-4 p-4 border-t border-gray-300 transition-all duration-300">
+        <h2 className="text-xl font-bold mb-4">Select Seats</h2>
+
+        <div className="flex justify-center gap-8">
+            {/* Left side seats */}
+            <div className="grid grid-cols-2 gap-4">
+                {seats.slice(0, Math.ceil(seats.length / 2)).map((seat) => (
+                    <div
+                        key={seat.seatNumber}
+                        onClick={() => handleSeatSelect(seat.seatNumber)}
+                        className={`w-12 h-12 cursor-pointer rounded-md
+                          ${seat.isReserved ? 'bg-red-500' : 'bg-green-500'}
+                          ${selectedSeats.includes(seat.seatNumber) ? 'border-2 border-yellow-500' : ''}`}
+                        style={{ pointerEvents: seat.isAvailable ? 'auto' : 'none' }}
                     >
-                        Reserve Selected Seats
-                    </button>
-                    {message && <p className="mt-4">{message}</p>}
-                </div>
-            )}
+                    </div>
+                ))}
+            </div>
+
+            {/* Right side seats */}
+            <div className="grid grid-cols-2 gap-4">
+                {seats.slice(Math.ceil(seats.length / 2)).map((seat) => (
+                    <div
+                        key={seat.seatNumber}
+                        onClick={() => handleSeatSelect(seat.seatNumber)}
+                        className={`w-12 h-12 cursor-pointer rounded-md
+                          ${seat.isReserved ? 'bg-red-500' : 'bg-green-500'}
+                          ${selectedSeats.includes(seat.seatNumber) ? 'border-2 border-yellow-500' : ''}`}
+                        style={{ pointerEvents: seat.isAvailable ? 'auto' : 'none' }}
+                    >
+                    </div>
+                ))}
+            </div>
+        </div>
+
+        {/* Legends */}
+        <div className="mt-4 flex gap-4 items-center">
+            <div className="flex items-center gap-2">
+                <div className="w-6 h-6 border-2 bg-green-500 rounded-md"></div>
+                <span>Available</span>
+            </div>
+            <div className="flex items-center gap-2">
+                <div className="w-6 h-6 border-2 bg-gray-500 rounded-md"></div>
+                <span>Reserved</span>
+            </div>
+            <div className="flex items-center gap-2">
+                <div className="w-6 h-6 border-2 bg-black rounded-md"></div>
+                <span>Selected</span>
+            </div>
+        </div>
+
+        {/* Reserve Button */}
+        <button
+            onClick={handleReserveSeats}
+            className="bg-red-600 text-white px-4 py-2 rounded-lg mt-4 cursor-pointer"
+            disabled={selectedSeats.length === 0}
+        >
+            Reserve Seats
+        </button>
+
+        {message && <p className="mt-4">{message}</p>}
+    </div>
+)}
+
         </div>
     );
 }

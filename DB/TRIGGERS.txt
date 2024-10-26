@@ -1,0 +1,37 @@
+CREATE TRIGGER trg_UpdateSeatsOnBusInfo
+ON BusSeats
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @busId VARCHAR(100);
+
+    -- Cursor to go through each affected BusID
+    DECLARE bus_cursor CURSOR FOR
+    SELECT DISTINCT BusID 
+    FROM (
+        SELECT BusID FROM INSERTED
+        UNION
+        SELECT BusID FROM DELETED
+    );
+
+    OPEN bus_cursor;
+    FETCH NEXT FROM bus_cursor INTO @busId;
+
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+        -- Update availableSeats and reservedSeats in BusInfo for the current BusID
+        UPDATE BusInfo
+        SET 
+            availableSeats = (SELECT COUNT(*) FROM BusSeats WHERE BusID = @busId AND IsAvailable = 1),
+            reservedSeats = TotalSeats - (SELECT COUNT(*) FROM BusSeats WHERE BusID = @busId AND IsAvailable = 1)
+        WHERE BusId = @busId;
+
+        FETCH NEXT FROM bus_cursor INTO @busId;
+    END
+
+    CLOSE bus_cursor;
+    DEALLOCATE bus_cursor;
+END;
+GO

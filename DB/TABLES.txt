@@ -13,25 +13,25 @@
 [RouteName] [varchar](100) NOT NULL,
 [StartLocation] [varchar](100) NOT NULL,
 [EndLocation] [varchar](100) NOT NULL,
-[totalTime] Time NOT NULL
+[TotalTime] Time NOT NULL
 
 3. ROLE TABLE:
 [Id] [nvarchar](255) NOT NULL,
 [RoleType] [varchar](255) NOT NULL,
 
 4. BUSINFO TABLE:
-[busId] [varchar](100) NOT NULL,
-[busName] [varchar](100) NOT NULL,
-[busNumber] [varchar](100) NOT NULL,
-[busType] [varchar](100) NOT NULL,
-[totalSeats] [int] NOT NULL,
-[availableSeats] [int],
-[reservedSeats] [int],
-[departureTime] Time NOT NULL,
-[arrivalTime] Time NOT NULL,
-[fare] [int] NOT NULL,
-[busRouteId] [int] NOT NULL,
-[complementory][varchar](100),
+[BusId] [varchar](100) NOT NULL,
+[BusName] [varchar](100) NOT NULL,
+[BusNumber] [varchar](100) NOT NULL,
+[BusType] [varchar](100) NOT NULL,
+[TotalSeats] [int] NOT NULL,
+[AvailableSeats] [int],
+[ReservedSeats] [int],
+[DepartureTime] Time NOT NULL,
+[ArrivalTime] Time NOT NULL,
+[Fare] [int] NOT NULL,
+[BusRouteId] [int] NOT NULL,
+[Complementory][varchar](100),
 [TravelDays] [varchar](100) NOT NULL
 
 5. SEAT TABLE:
@@ -40,6 +40,4 @@ CREATE TABLE BusSeats (
     BusID varchar(100),                   
     SeatNumber VARCHAR(100),       
     IsAvailable BIT DEFAULT 1,     
-    Price DECIMAL(10, 2),         
-    FOREIGN KEY (BusID) REFERENCES BusInfo(BusID) 
 );
