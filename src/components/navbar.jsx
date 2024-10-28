@@ -10,7 +10,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className='bg-slate-50 '>
+    <nav className='bg-[#EEEDED] '>
       <div className='flex justify-between items-center w-11/12 mx-auto p-4'>
         <div className='flex'>
           <h1 className='text-4xl w-32 p-1 border-r-2 border-slate-300 text-red-600 hover:text-gray-400 cursor-pointer'>
