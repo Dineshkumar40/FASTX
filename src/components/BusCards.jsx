@@ -8,7 +8,7 @@ function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable,
     { seatNumber: 'S2', isReserved: true },
     { seatNumber: 'S3', isReserved: false }, { seatNumber: 'S4', isReserved: false }, { seatNumber: 'S5', isReserved: false }, { seatNumber: 'S6', isReserved: false }, { seatNumber: 'S7', isReserved: false }, { seatNumber: 'S8', isReserved: false }, { seatNumber: 'S9', isReserved: false }, { seatNumber: 'S10', isReserved: false }, { seatNumber: 'S11', isReserved: false }, { seatNumber: 'S12', isReserved: false }, { seatNumber: 'S13', isReserved: false }, { seatNumber: 'S14', isReserved: false }, { seatNumber: 'S15', isReserved: false },]); // corrected initialization of seats array
     const [selectedSeats, setSelectedSeats] = useState([]);
-    const [message, setMessage] = useState('');
+    // const [message, setMessage] = useState('');
     const getSeatsString = () => selectedSeats.join(',');
     const sections = complementory ? complementory.split(',') : [];
 
@@ -40,15 +40,13 @@ function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable,
 
     const handleReserveSeats = async () => {
         try {
-            const response = await axios.post(`http://localhost:5000/api/bus/reserve`, {
+            await axios.post(`http://localhost:5000/api/bus/reserve`, {
                 BusId: busId,
                 seats: getSeatsString(),
             });
-            setMessage(response.data); // Display confirmation message
             setSelectedSeats([]);
         } catch (error) {
             console.error('Error reserving seats:', error);
-            setMessage('Error reserving seats, please try again.');
         }
     };
 
@@ -256,7 +254,7 @@ function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable,
                                 Reserve Seats
                             </button>
 
-                            {message && <p className="mt-4 text-center text-green-600 font-medium">{message}</p>}
+                            {/* {message && <p className="mt-4 text-center text-green-600 font-medium">{message}</p>} */}
                         </div>
                     )}
                 </div>

@@ -1,8 +1,8 @@
 import React from 'react';
 
-function BusComplementory({ complementories }) {
+function BusComplementory({ complementaries }) {
     return (
-        <p className="border-l-2 border-red-400 px-2">{complementories}</p>
+        <p className="border-l-2 border-red-400 px-2">{complementaries}</p>
     );
 }
 
