@@ -9,7 +9,7 @@
 [roleid] [nvarchar](255) NULL
 
 2. ROUTE TABLE: 
-[RouteId] [int] IDENTITY(1,1) NOT NULL,
+[RouteId] [varchar](100) NOT NULL,
 [RouteName] [varchar](100) NOT NULL,
 [StartLocation] [varchar](100) NOT NULL,
 [EndLocation] [varchar](100) NOT NULL,
@@ -30,7 +30,7 @@
 [DepartureTime] Time NOT NULL,
 [ArrivalTime] Time NOT NULL,
 [Fare] [int] NOT NULL,
-[BusRouteId] [int] NOT NULL,
+[RouteId] [int] NOT NULL,
 [Complementory][varchar](100),
 [TravelDays] [varchar](100) NOT NULL
 

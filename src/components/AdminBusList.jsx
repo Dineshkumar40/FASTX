@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import AdminBusCard from './ABC';
 import AddBusModal from './AddBusModel'; // Import the modal component
+import axiosInstance from './AxiosInstance';
 
 const AdminBusList = () => {
     const [buses, setBuses] = useState([]);
@@ -12,7 +13,7 @@ const AdminBusList = () => {
     useEffect(() => {
         const fetchBuses = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/bus');
+                const response = await axiosInstance.get('/user/getBuses');
                 setBuses(response.data);
                 setFilteredBuses(response.data);
             } catch (error) {
@@ -99,17 +100,18 @@ const AdminBusList = () => {
                     {filteredBuses.map((bus, index) => (
                         <AdminBusCard
                             key={index}
-                            BusName={bus.busName}
-                            Departure={bus.departureTime}
-                            Duration={bus.totalTime}
-                            Arrival={bus.arrivalTime}
-                            Fare={bus.fare}
-                            SeatsAvailable={bus.availableSeats}
-                            BusType={bus.busType}
+                            BusName={bus.BusName}
+                            Departure={bus.DepartureTime}
+                            Duration={bus.TotalTime}
+                            Arrival={bus.ArrivalTime}
+                            Fare={bus.Fare}
+                            SeatsAvailable={bus.AvailableSeats}
+                            BusType={bus.BusType}
                             FromLocation={bus.StartLocation}
                             ToLocation={bus.EndLocation}
-                            BusId={bus.busId}
-                            Complementory={bus.complementary}
+                            BusId={bus.BusId}
+                            Complementory={bus.Complementary}
+                            TravelDays={bus.TravelDays}
                         />
                     ))}
                     <AdminBusCard/>

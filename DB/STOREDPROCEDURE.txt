@@ -37,7 +37,7 @@ delete from Users where Id = @id;
 end 
 GO
 
-4.SearchBuses:
+4.SearchBuseswith Filter:
 CREATE PROCEDURE [dbo].[SearchBuses]
     @FromLocation VARCHAR(100),
     @ToLocation VARCHAR(100),

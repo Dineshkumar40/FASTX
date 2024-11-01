@@ -2,23 +2,25 @@ import React, { useState, useEffect } from 'react';
 import BusComplementory from './BusComplementory';
 import axios from 'axios';
 import EditBus from './EditBus';
+import axiosInstance from './AxiosInstance';
 
-function ABC({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusType, FromLocation, ToLocation, BusId, Complementary, }) {
+function ABC({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusType, FromLocation, ToLocation, BusId, Complementary,TravelDays}) {
     const [isExpanded, setIsExpanded] = useState(false);
 
     const [seats, setSeats] = useState([{ seatNumber: 'S1', isReserved: false },
     { seatNumber: 'S2', isReserved: true },
     { seatNumber: 'S3', isReserved: false }, { seatNumber: 'S4', isReserved: false }, { seatNumber: 'S5', isReserved: false }, { seatNumber: 'S6', isReserved: false }, { seatNumber: 'S7', isReserved: false }, { seatNumber: 'S8', isReserved: false }, { seatNumber: 'S9', isReserved: false }, { seatNumber: 'S10', isReserved: false }, { seatNumber: 'S11', isReserved: false }, { seatNumber: 'S12', isReserved: false }, { seatNumber: 'S13', isReserved: false }, { seatNumber: 'S14', isReserved: false }, { seatNumber: 'S15', isReserved: false },]); // corrected initialization of seats array
 
-        const BusDetils = {BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusType, FromLocation, ToLocation, BusId, Complementary,};
+    const BusDetils = { BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusType, FromLocation, ToLocation, BusId, Complementary,TravelDays};
 
     const [selectedSeats, setSelectedSeats] = useState([]);
     const sections = Complementary ? Complementary.split(',') : [];
     const getSeatsString = () => selectedSeats.join(',');
 
-    const [isModelOpen,setIsModelOpen]=useState(false);
 
-    const ToogleEditModel = ()=>{
+    const [isModelOpen, setIsModelOpen] = useState(false);
+
+    const ToogleEditModel = () => {
         setIsModelOpen(!isModelOpen);
     }
 
@@ -26,7 +28,7 @@ function ABC({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusT
         if (isExpanded) {
             const fetchSeats = async () => {
                 try {
-                    const response = await axios.get(`http://localhost:5000/api/bus/${BusId}/seats`);
+                    const response = await axiosInstance.get(`/user/getSeats?busId=${BusId}`);
                     setSeats(response.data);
                 } catch (error) {
                     console.error('Error fetching seat data:', error);
@@ -43,9 +45,9 @@ function ABC({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusT
 
     const handleSeatBlock = async () => {
         try {
-            await axios.post(`http://localhost:5000/api/bus/reserve`, {
-                BusId: BusId,
-                seats: getSeatsString(),
+            await axiosInstance.post("user/blockSeats", {
+                busId: BusId,
+                seatNumber: getSeatsString(),
             });
             setSelectedSeats([]);
         } catch (error) {
@@ -104,7 +106,7 @@ function ABC({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusT
                         Edit
                     </button>
 
-                    <EditBus IsModelOpen={isModelOpen} ToggleModal={ToogleEditModel} BusesData = {BusDetils}/>
+                    <EditBus IsModelOpen={isModelOpen} ToggleModal={ToogleEditModel} BusesData={BusDetils} />
 
                     <button onClick={toggleExpand} className="bg-red-600 text-white px-4 py-3 rounded-xl">
                         {isExpanded ? 'Hide Seats' : 'View Seats'}
@@ -137,11 +139,14 @@ function ABC({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusT
                                     <div className="grid grid-cols-2 gap-4">
                                         {seats.slice(0, Math.ceil(seats.length / 2)).map((seat) => (
                                             <div
-                                                key={seat.seatNumber} // unique seat identifier
-                                                onClick={() => !seat.isReserved && handleSeatSelect(seat.seatNumber)}
+                                                key={seat.seatNumber} 
+                                                onClick={() => !seat.isReserved && handleSeatSelect(seat.seatNumber)} 
                                                 className={`w-8 h-8 flex items-center justify-center text-white font-semibold cursor-pointer rounded-md
-                                       ${seat.isReserved ? 'bg-red-500 cursor-not-allowed' : selectedSeats.includes(seat.seatNumber) ? 'border-2 border-gray-400' : 'bg-green-500'}`}
-                                                title={seat.isReserved ? "Reserved" : "Available"}
+                                                        ${seat.isReserved ? 'bg-red-500 cursor-not-allowed' :
+                                                        seat.isBlocked ? 'bg-yellow-500' : 
+                                                            selectedSeats.includes(seat.seatNumber) ? 'border-2 border-gray-400' :
+                                                                'bg-green-500'}`}
+                                                title={seat.isReserved ? "Reserved" : seat.isBlocked ? "Blocked" : "Available"} // Update title for blocked seats
                                             >
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
@@ -168,13 +173,16 @@ function ABC({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusT
 
                                     {/* Right side seats */}
                                     <div className="grid grid-cols-2 gap-4">
-                                        {seats.slice(Math.ceil(seats.length / 2)).map((seat, index) => (
+                                        {seats.slice(Math.ceil(seats.length / 2)).map((seat) => (
                                             <div
                                                 key={seat.seatNumber} // unique seat identifier
-                                                onClick={() => !seat.isReserved && handleSeatSelect(seat.seatNumber)} // select only if not reserved
+                                                onClick={() => seat.IsBlocked && handleSeatSelect(seat.seatNumber)} // Allow selection only if the seat is blocked
                                                 className={`w-8 h-8 flex items-center justify-center text-white font-semibold cursor-pointer rounded-md
-               ${seat.isReserved ? 'bg-red-500 cursor-not-allowed' : selectedSeats.includes(seat.seatNumber) ? 'border-2 border-gray-400' : 'bg-green-500'}`}
-                                                title={seat.isReserved ? "Reserved" : "Available"}
+                                                        ${seat.isReserved ? 'bg-red-500 cursor-not-allowed' :
+                                                        seat.isBlocked ? 'bg-yellow-500' : // Optionally use a different color for blocked seats
+                                                            selectedSeats.includes(seat.seatNumber) ? 'border-2 border-gray-400' :
+                                                                'bg-green-500'}`}
+                                                title={seat.isReserved ? "Reserved" : seat.IsBlocked ? "Blocked" : "Available"} // Update title for blocked seats
                                             >
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
@@ -227,7 +235,7 @@ function ABC({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusT
                                 className={`bg-red-600 text-white px-4 py-2  border rounded-xl mt-3 w-full ${selectedSeats.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 disabled={selectedSeats.length === 0}
                             >
-                                Block Seats
+                                BlockorUnBlock Seats
                             </button>
                         </div>
                     </div>

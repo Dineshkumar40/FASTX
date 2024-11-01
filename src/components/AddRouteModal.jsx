@@ -1,21 +1,21 @@
 // AddRouteModal.jsx
 import React, { useState } from 'react';
-import axios from 'axios';
+import axiosInstance from './AxiosInstance';
 
 function AddRouteModal({ isOpen, toggleModal, onRouteAdded }) {
     const [routeId, setRouteId] = useState('');
-    const [fromLocation, setFromLocation] = useState('');
-    const [toLocation, setToLocation] = useState('');
+    const [startLocation, setFromLocation] = useState('');
+    const [endLocation, setToLocation] = useState('');
     const [duration, setDuration] = useState('');
     const [routeName, setRouteName] = useState('');
 
 
     const handleAddRoute = async (e) => {
         e.preventDefault();
-        const newRoute = { routeId, fromLocation, toLocation, duration,routeName };
+        const newRoute = { routeId,startLocation,endLocation, duration,routeName };
 
         try {
-            await axios.post('http://localhost:5000/api/routes', newRoute);
+            await axiosInstance.post('/user/routes', newRoute);
             onRouteAdded(newRoute); // Notify parent component
             resetForm();
             toggleModal(); // Close modal
@@ -57,7 +57,7 @@ function AddRouteModal({ isOpen, toggleModal, onRouteAdded }) {
                     <input
                         type="text"
                         placeholder="From Location"
-                        value={fromLocation}
+                        value={startLocation}
                         onChange={(e) => setFromLocation(e.target.value)}
                         className="border border-gray-300 rounded-lg p-2 w-full mb-2"
                         required
@@ -65,7 +65,7 @@ function AddRouteModal({ isOpen, toggleModal, onRouteAdded }) {
                     <input
                         type="text"
                         placeholder="To Location"
-                        value={toLocation}
+                        value={endLocation}
                         onChange={(e) => setToLocation(e.target.value)}
                         className="border border-gray-300 rounded-lg p-2 w-full mb-2"
                         required

@@ -1,11 +1,11 @@
 // EditRouteModal.jsx
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from './AxiosInstance';
 
 function EditRouteModal({ isOpen, toggleModal, routeData }) {
     const [routeId, setRouteId] = useState('');
-    const [fromLocation, setFromLocation] = useState('');
-    const [toLocation, setToLocation] = useState('');
+    const [startLocation, setFromLocation] = useState('');
+    const [endLocation, setToLocation] = useState('');
     const [duration, setDuration] = useState('');
     const [routeName, setRouteName] = useState('');
 
@@ -13,19 +13,19 @@ function EditRouteModal({ isOpen, toggleModal, routeData }) {
     useEffect(() => {
         if (routeData) {
             setRouteId(routeData.RouteId);
-            setFromLocation(routeData.FromLocation);
-            setToLocation(routeData.ToLocation);
-            setDuration(routeData.Duration);
+            setFromLocation(routeData.StartLocation);
+            setToLocation(routeData.EndLocation);
+            setDuration(routeData.TotalTime);
             setRouteName(routeData.Routename);
         }
     }, [routeData]);
 
     const handleEditRoute = async (e) => {
         e.preventDefault();
-        const updatedRoute = { routeId, fromLocation, toLocation, duration,routeName };
+        const updatedRoute = { routeId, startLocation,endLocation, duration,routeName };
 
         try {
-            await axios.put(`http://localhost:5000/api/routes/${routeId}`, updatedRoute);
+            await axiosInstance.put('/user/editRoutes', updatedRoute);
             toggleModal(); // Close modal
         } catch (error) {
             console.error('Error updating route:', error);
@@ -57,7 +57,7 @@ function EditRouteModal({ isOpen, toggleModal, routeData }) {
                     <input
                         type="text"
                         placeholder="From Location"
-                        value={fromLocation}
+                        value={startLocation}
                         onChange={(e) => setFromLocation(e.target.value)}
                         className="border border-gray-300 rounded-lg p-2 w-full mb-2"
                         required
@@ -66,7 +66,7 @@ function EditRouteModal({ isOpen, toggleModal, routeData }) {
                     <input
                         type="text"
                         placeholder="To Location"
-                        value={toLocation}
+                        value={endLocation}
                         onChange={(e) => setToLocation(e.target.value)}
                         className="border border-gray-300 rounded-lg p-2 w-full mb-2"
                         required

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import TableBody from './TableBodyofRoute';
 import AddRouteModal from './AddRouteModal';
+import axiosInstance from './AxiosInstance';
 
 const ABusRoute = () => {
     const [routes, setRoutes] = useState([]);
@@ -12,7 +12,7 @@ const ABusRoute = () => {
     useEffect(() => {
         const fetchRoutes = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/viewroutes'); 
+                const response = await axiosInstance.get('/user/getRoutes'); 
                 setRoutes(response.data);
                 setFilteredRoute(response.data);
             } catch (error) {

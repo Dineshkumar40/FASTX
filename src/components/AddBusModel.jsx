@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import axiosInstance from './AxiosInstance';
 
 const AddBusModal = ({ isOpen, onClose }) => {
     const [busId, setBusId] = useState('');
     const [busName, setBusName] = useState('');
-    const [fromLocation, setFromLocation] = useState('');
-    const [toLocation, setToLocation] = useState('');
-    const [duration, setDuration] = useState('');
     const [departureTime, setDepartureTime] = useState('');
     const [arrivalTime, setArrivalTime] = useState('');
     const [totalSeats, setTotalSeats] = useState('');
@@ -24,9 +22,6 @@ const AddBusModal = ({ isOpen, onClose }) => {
         const busData = {
             busId,
             busName,
-            fromLocation,
-            toLocation,
-            duration,
             departureTime,
             arrivalTime,
             totalSeats,
@@ -39,7 +34,7 @@ const AddBusModal = ({ isOpen, onClose }) => {
         };
 
         try {
-            await axios.post('http://localhost:5000/api/bus', busData);
+            await axiosInstance.post('/user/addBuses', busData);
             resetForm();
         } catch (error) {
             console.error('Error adding bus:', error);

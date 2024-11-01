@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import axiosInstance from './AxiosInstance';
 
 function EditBus({ BusesData, ToggleModal, IsModelOpen }) {
     const [busId, setBusId] = useState(BusesData.BusId || '');
@@ -32,7 +33,7 @@ function EditBus({ BusesData, ToggleModal, IsModelOpen }) {
         };
 
         try {
-            await axios.put(`http://localhost:5000/api/bus/${busId}`, busData); // Use PUT for updating
+            await axiosInstance.put('/user/editBuses', busData);
             resetForm();
             ToggleModal(); // Close modal on successful submit
         } catch (error) {
