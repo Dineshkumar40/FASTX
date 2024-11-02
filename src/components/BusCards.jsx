@@ -4,9 +4,9 @@ import BusComplementory from './BusComplementory';
 
 function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusType, FromLocation, ToLocation, busId, complementory }) {
     const [isExpanded, setIsExpanded] = useState(false);
-    const [seats, setSeats] = useState([{ seatNumber: 'S1', isReserved: false },
-    { seatNumber: 'S2', isReserved: true },
-    { seatNumber: 'S3', isReserved: false }, { seatNumber: 'S4', isReserved: false }, { seatNumber: 'S5', isReserved: false }, { seatNumber: 'S6', isReserved: false }, { seatNumber: 'S7', isReserved: false }, { seatNumber: 'S8', isReserved: false }, { seatNumber: 'S9', isReserved: false }, { seatNumber: 'S10', isReserved: false }, { seatNumber: 'S11', isReserved: false }, { seatNumber: 'S12', isReserved: false }, { seatNumber: 'S13', isReserved: false }, { seatNumber: 'S14', isReserved: false }, { seatNumber: 'S15', isReserved: false },]); // corrected initialization of seats array
+    const [seats, setSeats] = useState([{ SeatNumber: 'S1', IsAvailable: false },
+    { SeatNumber: 'S2', IsAvailable: true },
+    { SeatNumber: 'S3', IsAvailable: false }, { SeatNumber: 'S4', IsAvailable: false }, { SeatNumber: 'S5', IsAvailable: false }, { SeatNumber: 'S6', IsAvailable: false }, { SeatNumber: 'S7', IsAvailable: false }, { SeatNumber: 'S8', IsAvailable: false }, { SeatNumber: 'S9', IsAvailable: false }, { SeatNumber: 'S10', IsAvailable: false }, { SeatNumber: 'S11', IsAvailable: false }, { SeatNumber: 'S12', IsAvailable: false }, { SeatNumber: 'S13', IsAvailable: false }, { SeatNumber: 'S14', IsAvailable: false }, { SeatNumber: 'S15', IsAvailable: false },]); // corrected initialization of seats array
     const [selectedSeats, setSelectedSeats] = useState([]);
     // const [message, setMessage] = useState('');
     const getSeatsString = () => selectedSeats.join(',');
@@ -115,11 +115,11 @@ function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable,
                                 <div className="grid grid-cols-2 gap-4">
                                     {seats.slice(0, Math.ceil(seats.length / 2)).map((seat) => (
                                         <div
-                                            key={seat.seatNumber} // unique seat identifier
-                                            onClick={() => !seat.isReserved && handleSeatSelect(seat.seatNumber)}
+                                            key={seat.SeatNumber} // unique seat identifier
+                                            onClick={() => seat.IsAvailable && !seat.IsBlocked && handleSeatSelect(seat.SeatNumber)}
                                             className={`w-8 h-8 flex items-center justify-center text-white font-semibold cursor-pointer rounded-md
-                                       ${seat.isReserved ? 'bg-red-500 cursor-not-allowed' : selectedSeats.includes(seat.seatNumber) ? 'border-2 border-gray-400' : 'bg-green-500'}`}
-                                            title={seat.isReserved ? "Reserved" : "Available"}
+                                       ${!seat.IsAvailable || seat.IsBlocked ? 'bg-red-500 cursor-not-allowed' : selectedSeats.includes(seat.SeatNumber) ? 'border-2 border-gray-400' : 'bg-green-500'}`}
+                                            title={!seat.IsAvailable ? "Reserved" : seat.IsBlocked ? "Reserved" : "Available"}
                                         >
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -147,13 +147,13 @@ function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable,
                                 {/* Right side seats */}
                                 <div className="grid grid-cols-2 gap-4">
                                     {seats.slice(Math.ceil(seats.length / 2)).map((seat, index) => (
-                                        <div
-                                            key={seat.seatNumber} // unique seat identifier
-                                            onClick={() => !seat.isReserved && handleSeatSelect(seat.seatNumber)} // select only if not reserved
-                                            className={`w-8 h-8 flex items-center justify-center text-white font-semibold cursor-pointer rounded-md
-               ${seat.isReserved ? 'bg-red-500 cursor-not-allowed' : selectedSeats.includes(seat.seatNumber) ? 'border-2 border-gray-400' : 'bg-green-500'}`}
-                                            title={seat.isReserved ? "Reserved" : "Available"}
-                                        >
+                                          <div
+                                          key={seat.SeatNumber} // unique seat identifier
+                                          onClick={() => seat.IsAvailable && !seat.IsBlocked && handleSeatSelect(seat.SeatNumber)}
+                                          className={`w-8 h-8 flex items-center justify-center text-white font-semibold cursor-pointer rounded-md
+                                     ${!seat.IsAvailable || seat.IsBlocked ? 'bg-red-500 cursor-not-allowed' : selectedSeats.includes(seat.SeatNumber) ? 'border-2 border-gray-400' : 'bg-green-500'}`}
+                                          title={!seat.IsAvailable ? "Reserved" : seat.IsBlocked ? "Reserved" : "Available"}
+                                      >
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="24"

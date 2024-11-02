@@ -40,7 +40,7 @@ function BusList() {
         if (nonAc) types.push('Non-AC');
         if (sleeper) types.push('Sleeper');
         if (seater) types.push('Seater');
-        return types;
+        return types.length > 0 ? types : null;
     }, [ac, nonAc, sleeper, seater]);
 
     const getTimeSlots = useCallback(() => {
