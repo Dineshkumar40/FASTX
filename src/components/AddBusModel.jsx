@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import axiosInstance from './AxiosInstance';
 
 const AddBusModal = ({ isOpen, onClose }) => {
@@ -9,7 +8,7 @@ const AddBusModal = ({ isOpen, onClose }) => {
     const [arrivalTime, setArrivalTime] = useState('');
     const [totalSeats, setTotalSeats] = useState('');
     const[fare,setFare]=useState('');
-    const [complementary,setComplemenatry] = useState('');
+    const [complementory,setComplementory] = useState('');
     const[routeId,setRouteID]=useState('');
     const[busType,setBusType]=useState('');
     const[travelDays,setTravelDays]=useState('');
@@ -26,7 +25,7 @@ const AddBusModal = ({ isOpen, onClose }) => {
             arrivalTime,
             totalSeats,
             fare,
-            complementary,
+            complementory,
             routeId,
             busType,
             travelDays,
@@ -44,12 +43,16 @@ const AddBusModal = ({ isOpen, onClose }) => {
     const resetForm = () => {
         setBusId('');
         setBusName('');
-        setFromLocation('');
-        setToLocation('');
-        setDuration('');
+        setBusNUmber('');       
         setDepartureTime('');
         setArrivalTime('');
         setTotalSeats('');
+        setRouteID('');
+        setBusType('');
+        setBusType('');
+        setComplementory('');
+        setTravelDays('');
+
     };
 
     if (!isOpen) return null;
@@ -113,7 +116,7 @@ const AddBusModal = ({ isOpen, onClose }) => {
                             type="complementries"
                             placeholder="Complement (eg:charger,WaterBottle....."
                             value={complementary}
-                            onChange={(e) => setComplemenatry(e.target.value)}
+                            onChange={(e) => setComplementory(e.target.value)}
                             className="border border-gray-300 rounded-lg p-2"
                             required
                         />

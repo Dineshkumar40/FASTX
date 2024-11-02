@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import BusComplementory from './BusComplementory';
-import axios from 'axios';
 import EditBus from './EditBus';
 import axiosInstance from './AxiosInstance';
 
-function ABC({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusType, FromLocation, ToLocation, BusId, Complementary,TravelDays}) {
+function ABC({ BusName, BusNumber,DepartureTime, Duration,ArrivalTime, Fare, AvailableSeats,TotalSeats, BusType, FromLocation, ToLocation, BusId, Complementory,TravelDays,RouteId}) {
     const [isExpanded, setIsExpanded] = useState(false);
 
     const [seats, setSeats] = useState([{ seatNumber: 'S1', isReserved: false },
     { seatNumber: 'S2', isReserved: true },
     { seatNumber: 'S3', isReserved: false }, { seatNumber: 'S4', isReserved: false }, { seatNumber: 'S5', isReserved: false }, { seatNumber: 'S6', isReserved: false }, { seatNumber: 'S7', isReserved: false }, { seatNumber: 'S8', isReserved: false }, { seatNumber: 'S9', isReserved: false }, { seatNumber: 'S10', isReserved: false }, { seatNumber: 'S11', isReserved: false }, { seatNumber: 'S12', isReserved: false }, { seatNumber: 'S13', isReserved: false }, { seatNumber: 'S14', isReserved: false }, { seatNumber: 'S15', isReserved: false },]); // corrected initialization of seats array
 
-    const BusDetils = { BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusType, FromLocation, ToLocation, BusId, Complementary,TravelDays};
+// to send to edit model
+    const BusDetails = { BusName,BusNumber,  DepartureTime,ArrivalTime, Fare, TotalSeats,BusType, BusId, Complementory,TravelDays,RouteId};
 
     const [selectedSeats, setSelectedSeats] = useState([]);
-    const sections = Complementary ? Complementary.split(',') : [];
+    const sections = Complementory ? Complementory.split(',') : [];
     const getSeatsString = () => selectedSeats.join(',');
 
 
@@ -45,7 +45,7 @@ function ABC({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusT
 
     const handleSeatBlock = async () => {
         try {
-            await axiosInstance.post("user/blockSeats", {
+            await axiosInstance.post("/user/blockSeats", {
                 busId: BusId,
                 seatNumber: getSeatsString(),
             });
@@ -70,15 +70,15 @@ function ABC({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusT
             <div className="flex justify-between items-center mb-2">
                 <div className="font-semibold text-lg">{BusName}</div>
                 <div className="flex items-center space-x-16 p-2">
-                    <p className="font-semibold text-2xl">{Departure}</p>
+                    <p className="font-semibold text-2xl">{DepartureTime}</p>
                     <p className="opacity-50">{Duration}</p>
-                    <p className="text-lg">{Arrival}</p>
+                    <p className="text-lg">{ArrivalTime}</p>
                     <div className="flex items-center space-x-0 bg-red-500 rounded-full text-white text-sm font-semibold" style={{ padding: '3px 4px', width: '40px', height: '24px' }}>
                         <span>☆2.2</span>
                     </div>
                     <div className="flex items-center space-x-16">
                         <p><span className="opacity-75">Starts from <br />INR </span><span className="font-bold">{Fare}</span></p>
-                        <p><span className="font-semibold">{SeatsAvailable}</span> <span className="opacity-50">Seats<br /> available</span></p>
+                        <p><span className="font-semibold">{AvailableSeats}</span> <span className="opacity-50">Seats<br /> available</span></p>
                     </div>
                 </div>
             </div>
@@ -106,7 +106,7 @@ function ABC({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusT
                         Edit
                     </button>
 
-                    <EditBus IsModelOpen={isModelOpen} ToggleModal={ToogleEditModel} BusesData={BusDetils} />
+                    <EditBus IsModelOpen={isModelOpen} ToggleModal={ToogleEditModel} BusesData={BusDetails} />
 
                     <button onClick={toggleExpand} className="bg-red-600 text-white px-4 py-3 rounded-xl">
                         {isExpanded ? 'Hide Seats' : 'View Seats'}
@@ -139,14 +139,14 @@ function ABC({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusT
                                     <div className="grid grid-cols-2 gap-4">
                                         {seats.slice(0, Math.ceil(seats.length / 2)).map((seat) => (
                                             <div
-                                                key={seat.seatNumber} 
-                                                onClick={() => !seat.isReserved && handleSeatSelect(seat.seatNumber)} 
+                                                key={seat.SeatNumber} 
+                                                onClick={() => handleSeatSelect(seat.SeatNumber)} 
                                                 className={`w-8 h-8 flex items-center justify-center text-white font-semibold cursor-pointer rounded-md
-                                                        ${seat.isReserved ? 'bg-red-500 cursor-not-allowed' :
-                                                        seat.isBlocked ? 'bg-yellow-500' : 
-                                                            selectedSeats.includes(seat.seatNumber) ? 'border-2 border-gray-400' :
+                                                        ${!seat.IsAvailable ? 'bg-red-500 cursor-not-allowed' :
+                                                        seat.IsBlocked ? 'bg-yellow-500' : 
+                                                            selectedSeats.includes(seat.SeatNumber) ? 'border-2 border-gray-400' :
                                                                 'bg-green-500'}`}
-                                                title={seat.isReserved ? "Reserved" : seat.isBlocked ? "Blocked" : "Available"} // Update title for blocked seats
+                                                title={!seat.IsAvailable? "Reserved" : seat.IsBlocked ? "Blocked" : "Available"} // Update title for blocked seats
                                             >
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
@@ -175,14 +175,14 @@ function ABC({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusT
                                     <div className="grid grid-cols-2 gap-4">
                                         {seats.slice(Math.ceil(seats.length / 2)).map((seat) => (
                                             <div
-                                                key={seat.seatNumber} // unique seat identifier
-                                                onClick={() => seat.IsBlocked && handleSeatSelect(seat.seatNumber)} // Allow selection only if the seat is blocked
+                                                key={seat.SeatNumber} // unique seat identifier
+                                                onClick={() => handleSeatSelect(seat.SeatNumber)} // Allow selection only if the seat is blocked
                                                 className={`w-8 h-8 flex items-center justify-center text-white font-semibold cursor-pointer rounded-md
-                                                        ${seat.isReserved ? 'bg-red-500 cursor-not-allowed' :
-                                                        seat.isBlocked ? 'bg-yellow-500' : // Optionally use a different color for blocked seats
-                                                            selectedSeats.includes(seat.seatNumber) ? 'border-2 border-gray-400' :
+                                                        ${!seat.IsAvailable ? 'bg-red-500 cursor-not-allowed' :
+                                                        seat.IsBlocked ? 'bg-yellow-500' : // Optionally use a different color for blocked seats
+                                                            selectedSeats.includes(seat.SeatNumber) ? 'border-2 border-gray-400' :
                                                                 'bg-green-500'}`}
-                                                title={seat.isReserved ? "Reserved" : seat.IsBlocked ? "Blocked" : "Available"} // Update title for blocked seats
+                                                title={!seat.IsAvailable ? "Reserved" : seat.IsBlocked ? "Blocked" : "Available"} // Update title for blocked seats
                                             >
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"

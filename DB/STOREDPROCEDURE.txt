@@ -129,8 +129,8 @@ BEGIN
         DECLARE @seatNum INT = 1;
         WHILE @seatNum <= @totalSeats
         BEGIN
-            INSERT INTO BusSeats (SeatID, BusID, SeatNumber, IsAvailable, Price)
-            VALUES (NEWID(), @busId, 'S' + CAST(@seatNum AS VARCHAR), 1, @fare);
+            INSERT INTO BusSeats (SeatID, BusID, SeatNumber,)
+            VALUES (NEWID(), @busId, 'S' + CAST(@seatNum AS VARCHAR));
 
             SET @seatNum = @seatNum + 1;
         END;
@@ -143,8 +143,8 @@ BEGIN
         DECLARE @seatNum INT = 1;
         WHILE @seatNum <= @totalSeats
         BEGIN
-            INSERT INTO BusSeats (SeatID, BusID, SeatNumber, IsAvailable, Price)
-            VALUES (NEWID(), @busId, 'S' + CAST(@seatNum AS VARCHAR), @fare);
+            INSERT INTO BusSeats (SeatID, BusID, SeatNumber,)
+            VALUES (NEWID(), @busId, 'S' + CAST(@seatNum AS VARCHAR));
 
             SET @seatNum = @seatNum + 1;
         END;

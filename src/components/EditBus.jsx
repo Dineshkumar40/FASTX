@@ -9,7 +9,7 @@ function EditBus({ BusesData, ToggleModal, IsModelOpen }) {
     const [arrivalTime, setArrivalTime] = useState(BusesData.ArrivalTime || '');
     const [totalSeats, setTotalSeats] = useState('');
     const [fare, setFare] = useState(BusesData.Fare || '');
-    const [complementary, setComplementary] = useState(BusesData.Complementary || '');
+    const [complementory, setComplementary] = useState(BusesData.Complementory || '');
     const [routeId, setRouteID] = useState(BusesData.RouteId || '');
     const [busType, setBusType] = useState(BusesData.BusType || '');
     const [travelDays, setTravelDays] = useState('');
@@ -25,7 +25,7 @@ function EditBus({ BusesData, ToggleModal, IsModelOpen }) {
             arrivalTime,
             totalSeats,
             fare,
-            complementary, // Correct spelling
+            complementory, 
             routeId,
             busType,
             travelDays,

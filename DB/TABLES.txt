@@ -40,4 +40,5 @@ CREATE TABLE BusSeats (
     BusID varchar(100),                   
     SeatNumber VARCHAR(100),       
     IsAvailable BIT DEFAULT 1,     
+    IsBlocked  BIT DEFAULT 0
 );

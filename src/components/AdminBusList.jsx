@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import AdminBusCard from './ABC';
 import AddBusModal from './AddBusModel'; // Import the modal component
 import axiosInstance from './AxiosInstance';
@@ -13,7 +12,7 @@ const AdminBusList = () => {
     useEffect(() => {
         const fetchBuses = async () => {
             try {
-                const response = await axiosInstance.get('/user/getBuses');
+                const response = await axiosInstance.get('/user/adminGetBuses');
                 setBuses(response.data);
                 setFilteredBuses(response.data);
             } catch (error) {
@@ -101,17 +100,20 @@ const AdminBusList = () => {
                         <AdminBusCard
                             key={index}
                             BusName={bus.BusName}
-                            Departure={bus.DepartureTime}
+                            BusNumber={bus.BusNumber}
+                            TotalSeats={bus.TotalSeats}
+                            DepartureTime={bus.DepartureTime}
                             Duration={bus.TotalTime}
-                            Arrival={bus.ArrivalTime}
+                            ArrivalTime={bus.ArrivalTime}
                             Fare={bus.Fare}
-                            SeatsAvailable={bus.AvailableSeats}
+                            AvailableSeats={bus.AvailableSeats}
                             BusType={bus.BusType}
                             FromLocation={bus.StartLocation}
                             ToLocation={bus.EndLocation}
                             BusId={bus.BusId}
                             Complementory={bus.Complementary}
                             TravelDays={bus.TravelDays}
+                            RouteId={bus.RouteId}
                         />
                     ))}
                     <AdminBusCard/>
