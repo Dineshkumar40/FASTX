@@ -9,6 +9,10 @@ const Section = () => {
     const inputFocusTwo = useRef(null);
     const dateHook = useRef(null);
     const [selectedDate, setSelectedDate] = useState(null);
+    const [forMonth,setForMonth] = useState('');
+    const month = forMonth.toLocaleString('default', { month: 'short' }); // Abbreviated month name
+console.log(month); // Example: "Dec"
+
     const navigate = useNavigate();
 
 
@@ -16,7 +20,7 @@ const Section = () => {
         const fromLocation = inputFocusOne.current.value;
         const toLocation = inputFocusTwo.current.value;
         const travelDate = selectedDate;
-        navigate(`/Buses/${fromLocation}/${toLocation}/${travelDate}`);
+        navigate(`/Buses/${fromLocation}/${toLocation}/${travelDate}/${month}`);
         // console.log({ fromLocation, toLocation, travelDate });
     };
 
@@ -75,7 +79,12 @@ const Section = () => {
                                 <Datepicker 
                                     className='border-none focus:outline-none bg-transparent'
                                     selected={selectedDate} 
-                                    onChange={(date) => setSelectedDate(date)} 
+                                    onChange={(date) => {
+                                        setForMonth(date);
+                                        const isoDate = date.toISOString(); // Convert to ISO format
+                                        setSelectedDate(isoDate);
+                                        // console.log(isoDate); // Output: "2024-12-12T00:00:00.000Z"
+                                    }} 
                                     minDate={new Date()} 
                                     ref={dateHook} 
                                 />

@@ -6,7 +6,7 @@ import Footer from './footer';
 import Navbar from './navbar';
 
 function BusList() {
-    const { fromLocation, toLocation, travelDate } = useParams();
+    const { fromLocation, toLocation, travelDate,month } = useParams();
     const [isLoading, setIsLoading] = useState(true);
     const [firstBusTime, setFirstBusTime] = useState(null);
     const [lastBusTime, setLastBusTime] = useState(null);
@@ -40,7 +40,7 @@ function BusList() {
         if (nonAc) types.push('Non-AC');
         if (sleeper) types.push('Sleeper');
         if (seater) types.push('Seater');
-        return types.length > 0 ? types : null;
+        return types.length > 0 ? types.join(',') : null;
     }, [ac, nonAc, sleeper, seater]);
 
     const getTimeSlots = useCallback(() => {
@@ -71,9 +71,9 @@ function BusList() {
         const { departure, arrival } = getTimeSlots();
         setIsLoading(true);
         axios.post('/api/searchbuses', {
-            from: fromLocation,
-            to: toLocation,
-            date: travelDate,
+            StartLocation: fromLocation,
+            endLocation: toLocation,
+            travelDate: travelDate,
             bustype: getBusTypes(),
             departureTimeSlots: departure,
             arrivalTimeSlots: arrival,
@@ -232,7 +232,7 @@ function BusList() {
                                 </div>
                             </div>
                             {buses.map((bus, index) => (
-                                <BusCards key={index}  BusName={bus.busName} Departure={bus.departureTime} Duration={bus.totalTime} Arrival={bus.arrivalTime} Fare={bus.fare} SeatsAvailable={bus.availableSeats} BusType={bus.busType} FromLocation={bus.StartLocation} ToLocation={bus.EndLocation} busId={bus.busId} complementory={bus.complementory} />
+                                <BusCards key={index}  BusName={bus.BusName} Departure={bus.DepartureTime} Duration={bus.TotalTime} Arrival={bus.ArrivalTime} Fare={bus.Fare} SeatsAvailable={bus.AvailableSeats} BusType={bus.BusType} FromLocation={bus.StartLocation} ToLocation={bus.EndLocation} busId={bus.busId} complementory={bus.complementory} Month={month} />
 
                             ))}
                             <BusCards />

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import axiosInstance from './AxiosInstance';
 
 function EditBus({ BusesData, ToggleModal, IsModelOpen }) {
@@ -123,7 +122,7 @@ function EditBus({ BusesData, ToggleModal, IsModelOpen }) {
                         <input
                             type="text"
                             placeholder="Complement (eg:charger,WaterBottle....."
-                            value={complementary}
+                            value={complementory}
                             onChange={(e) => setComplementary(e.target.value)}
                             className="border border-gray-300 rounded-lg p-2"
                             required

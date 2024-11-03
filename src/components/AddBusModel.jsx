@@ -105,7 +105,7 @@ const AddBusModal = ({ isOpen, onClose }) => {
                             required
                         />
                          <input
-                            type="text"
+                            type="number"
                             placeholder="Enter Fare"
                             value={fare}
                             onChange={(e) => setFare(e.target.value)}
@@ -115,7 +115,7 @@ const AddBusModal = ({ isOpen, onClose }) => {
                          <input
                             type="complementries"
                             placeholder="Complement (eg:charger,WaterBottle....."
-                            value={complementary}
+                            value={complementory}
                             onChange={(e) => setComplementory(e.target.value)}
                             className="border border-gray-300 rounded-lg p-2"
                             required

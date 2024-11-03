@@ -2,6 +2,7 @@
 import React from 'react';
 import { useState } from 'react';
 import EditRouteModal from './EditRouteModal';
+import axiosInstance from './AxiosInstance';
 
 const TableBody = ({ FilteredRoutes }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,7 +35,7 @@ const TableBody = ({ FilteredRoutes }) => {
                                 <button className="text-blue-600 hover:underline">Edit</button>
                                 <button 
     className="text-red-600 hover:underline ml-2" 
-    onClick={() => onDelete(RouteId)} // Pass the routeId here
+    onClick={() => onDelete(route.RouteId)} // Pass the routeId here
 >
     Delete
 </button>                            </td>

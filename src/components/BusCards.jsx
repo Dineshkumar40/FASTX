@@ -1,16 +1,22 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import BusComplementory from './BusComplementory';
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from './AxiosInstance';
 
-function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusType, FromLocation, ToLocation, busId, complementory }) {
+function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusType, FromLocation, ToLocation, busId, complementory,Month }) {
     const [isExpanded, setIsExpanded] = useState(false);
     const [seats, setSeats] = useState([{ SeatNumber: 'S1', IsAvailable: false },
     { SeatNumber: 'S2', IsAvailable: true },
-    { SeatNumber: 'S3', IsAvailable: false }, { SeatNumber: 'S4', IsAvailable: false }, { SeatNumber: 'S5', IsAvailable: false }, { SeatNumber: 'S6', IsAvailable: false }, { SeatNumber: 'S7', IsAvailable: false }, { SeatNumber: 'S8', IsAvailable: false }, { SeatNumber: 'S9', IsAvailable: false }, { SeatNumber: 'S10', IsAvailable: false }, { SeatNumber: 'S11', IsAvailable: false }, { SeatNumber: 'S12', IsAvailable: false }, { SeatNumber: 'S13', IsAvailable: false }, { SeatNumber: 'S14', IsAvailable: false }, { SeatNumber: 'S15', IsAvailable: false },]); // corrected initialization of seats array
+    { SeatNumber: 'S3', IsAvailable: true }, { SeatNumber: 'S4', IsAvailable: false }, { SeatNumber: 'S5', IsAvailable: false }, { SeatNumber: 'S6', IsAvailable: false }, { SeatNumber: 'S7', IsAvailable: false }, { SeatNumber: 'S8', IsAvailable: true }, { SeatNumber: 'S9', IsAvailable: true }, { SeatNumber: 'S10', IsAvailable: false }, { SeatNumber: 'S11', IsAvailable: true }, { SeatNumber: 'S12', IsAvailable: false }, { SeatNumber: 'S13', IsAvailable: true }, { SeatNumber: 'S14', IsAvailable: true }, { SeatNumber: 'S15', IsAvailable: false },]); // corrected initialization of seats array
     const [selectedSeats, setSelectedSeats] = useState([]);
     // const [message, setMessage] = useState('');
     const getSeatsString = () => selectedSeats.join(',');
+    const seatsString = getSeatsString();
+    const noOfSeats = selectedSeats.length;
+    console.log(noOfSeats);
     const sections = complementory ? complementory.split(',') : [];
+
+    const navigate = useNavigate();
 
     const toggleExpand = () => {
         setIsExpanded(!isExpanded);
@@ -20,7 +26,7 @@ function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable,
         if (isExpanded) {
             const fetchSeats = async () => {
                 try {
-                    const response = await axios.get(`http://localhost:5000/api/bus/${busId}/seats`);
+                    const response = await axiosInstance.get(`/user/getSeats?busId=${busId}`);
                     setSeats(response.data);
                 } catch (error) {
                     console.error('Error fetching seat data:', error);
@@ -37,18 +43,11 @@ function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable,
                 : [...prevSelectedSeats, seatNumber]
         );
     };
+    const handleReserveSeats = () => {
+        navigate(`/ReservationForm/${busId}/${seatsString}/${FromLocation}/${ToLocation}/${Duration}/${noOfSeats}/${Month}`);
+      };
 
-    const handleReserveSeats = async () => {
-        try {
-            await axios.post(`http://localhost:5000/api/bus/reserve`, {
-                BusId: busId,
-                seats: getSeatsString(),
-            });
-            setSelectedSeats([]);
-        } catch (error) {
-            console.error('Error reserving seats:', error);
-        }
-    };
+   
 
     return (
         <div className="border hover:border-red-200 transition-shadow duration-300 hover:shadow-xl rounded-2xl p-4 mb-4 group relative">
@@ -250,6 +249,7 @@ function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable,
                                 onClick={handleReserveSeats}
                                 className={`bg-red-600 text-white px-4 py-2 rounded-lg mt-1 w-full ${selectedSeats.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 disabled={selectedSeats.length === 0}
+                               
                             >
                                 Reserve Seats
                             </button>
