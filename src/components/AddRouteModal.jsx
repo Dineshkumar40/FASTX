@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import axiosInstance from './AxiosInstance';
 
-function AddRouteModal({ isOpen, toggleModal, onRouteAdded }) {
+function AddRouteModal({ isOpen, toggleModal, }) {
     const [routeId, setRouteId] = useState('');
     const [startLocation, setFromLocation] = useState('');
     const [endLocation, setToLocation] = useState('');
@@ -11,12 +11,19 @@ function AddRouteModal({ isOpen, toggleModal, onRouteAdded }) {
 
 
     const handleAddRoute = async (e) => {
+        const newRoute = {routeId,startLocation,endLocation, duration,routeName };
+        // const newRoute ={routeId , routeName};
+        console.log("hi",newRoute);
+
         e.preventDefault();
-        const newRoute = { routeId,startLocation,endLocation, duration,routeName };
 
         try {
-            await axiosInstance.post('/user/routes', newRoute);
-            onRouteAdded(newRoute); // Notify parent component
+            console.log("hi1",newRoute);
+
+            await axiosInstance.post('/user/addRoutes', newRoute);
+                        console.log("hi",newRoute);
+
+            // onRouteAdded(newRoute); 
             resetForm();
             toggleModal(); // Close modal
         } catch (error) {
@@ -37,7 +44,7 @@ function AddRouteModal({ isOpen, toggleModal, onRouteAdded }) {
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
             <div className="bg-white rounded-lg shadow-md w-11/12 md:w-2/3 lg:w-1/2 p-6">
                 <h2 className="text-xl font-semibold mb-4">Add Route</h2>
-                <form onSubmit={handleAddRoute}>
+            
                     <input
                         type="text"
                         placeholder="Route ID"
@@ -87,13 +94,15 @@ function AddRouteModal({ isOpen, toggleModal, onRouteAdded }) {
                             Cancel
                         </button>
                         <button
-                            type="submit"
                             className="text-white bg-red-600 hover:bg-red-700 rounded-lg px-4 py-2"
+                            
+                            onClick={handleAddRoute}
                         >
                             Add Route
+
                         </button>
                     </div>
-                </form>
+                
             </div>
         </div>
     );

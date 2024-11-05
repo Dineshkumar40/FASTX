@@ -16,7 +16,7 @@ const AdminBusList = () => {
                 setBuses(response.data);
                 setFilteredBuses(response.data);
             } catch (error) {
-                console.error('Error fetching buses:', error);
+                console.error('Error fetching buses:',  error.response ? error.response.data : error.message);
             }
         };
 
@@ -99,24 +99,24 @@ const AdminBusList = () => {
                     {filteredBuses.map((bus, index) => (
                         <AdminBusCard
                             key={index}
-                            BusName={bus.BusName}
-                            BusNumber={bus.BusNumber}
-                            TotalSeats={bus.TotalSeats}
-                            DepartureTime={bus.DepartureTime}
-                            Duration={bus.TotalTime}
-                            ArrivalTime={bus.ArrivalTime}
-                            Fare={bus.Fare}
-                            AvailableSeats={bus.AvailableSeats}
-                            BusType={bus.BusType}
-                            FromLocation={bus.StartLocation}
-                            ToLocation={bus.EndLocation}
-                            BusId={bus.BusId}
-                            Complementory={bus.Complementary}
-                            TravelDays={bus.TravelDays}
-                            RouteId={bus.RouteId}
+                            BusName={bus.busName}
+                            BusNumber={bus.busNumber}
+                            TotalSeats={bus.totalSeats}
+                            DepartureTime={bus.departureTime}
+                            Duration={bus.totalTime}
+                            ArrivalTime={bus.arrivalTime}
+                            Fare={bus.fare}
+                            AvailableSeats={bus.availableSeats}
+                            BusType={bus.busType}
+                            FromLocation={bus.startLocation}
+                            ToLocation={bus.endLocation}
+                            BusId={bus.busId}
+                            Complementory={bus.complementary}
+                            TravelDays={bus.travelDays}
+                            RouteId={bus.routeId}
                         />
                     ))}
-                    <AdminBusCard/>
+                    
 
                     {/* AddBusModal */}
                     <AddBusModal isOpen={isModalOpen} onClose={toggleModal} />

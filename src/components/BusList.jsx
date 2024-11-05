@@ -1,15 +1,15 @@
-import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import axiosInstance from './AxiosInstance';
 import BusCards from './BusCards';
 import Footer from './footer';
 import Navbar from './navbar';
 
 function BusList() {
     const { fromLocation, toLocation, travelDate,month } = useParams();
-    const [isLoading, setIsLoading] = useState(true);
-    const [firstBusTime, setFirstBusTime] = useState(null);
-    const [lastBusTime, setLastBusTime] = useState(null);
+    // const [isLoading, setIsLoading] = useState(true);
+    // const [firstBusTime, setFirstBusTime] = useState(null);
+    // const [lastBusTime, setLastBusTime] = useState(null);
 
     const [ac, setAc] = useState(false);
     const [nonAc, setNonAc] = useState(false);
@@ -69,22 +69,29 @@ function BusList() {
 
     const fetchBuses = useCallback(() => {
         const { departure, arrival } = getTimeSlots();
-        setIsLoading(true);
-        axios.post('/api/searchbuses', {
-            StartLocation: fromLocation,
+
+        console.log("fromLocation", fromLocation);
+        console.log("toLocation", toLocation);
+        console.log("travelDate", travelDate); 
+        const request = {
+            startLocation: fromLocation,
             endLocation: toLocation,
             travelDate: travelDate,
-            bustype: getBusTypes(),
+            BusType: getBusTypes(),
             departureTimeSlots: departure,
             arrivalTimeSlots: arrival,
-        })
+        }
+        console.log("fetchbuses", request);
+        // setIsLoading(true);
+        axiosInstance.post('/user/searchbuses', request)
             .then((response) => {
+                console.log('response.data',response.data)
                 setBuses(response.data);
-                setIsLoading(false);
+                // setIsLoading(false);
             })
             .catch((error) => {
                 console.error('Error fetching buses:', error);
-                setIsLoading(false);
+                // setIsLoading(false);
             });
     }, [fromLocation, toLocation, travelDate, getTimeSlots, getBusTypes]);
 
@@ -92,13 +99,21 @@ function BusList() {
         fetchBuses();
     }, [fetchBuses]);
 
+    // const initialfetchbuses = () => {
+
+    // }
+    // useEffect(()=>{
+    //     initialfetchbuses();
+    // }
+    // ,[]);
+
     // First and Last Bus
-    useEffect(() => {
-        if (buses && buses.length > 0) {
-            setFirstBusTime(buses[0].departureTime);
-            setLastBusTime(buses[buses.length - 1].departureTime);
-        }
-    }, [buses]);
+    // useEffect(() => {
+    //     if (buses && buses.length > 0) {
+    //         setFirstBusTime(buses[0].departureTime);
+    //         setLastBusTime(buses[buses.length - 1].departureTime);
+    //     }
+    // }, [buses]);
 
 
     return (
@@ -232,12 +247,12 @@ function BusList() {
                                 </div>
                             </div>
                             {buses.map((bus, index) => (
-                                <BusCards key={index}  BusName={bus.BusName} Departure={bus.DepartureTime} Duration={bus.TotalTime} Arrival={bus.ArrivalTime} Fare={bus.Fare} SeatsAvailable={bus.AvailableSeats} BusType={bus.BusType} FromLocation={bus.StartLocation} ToLocation={bus.EndLocation} busId={bus.busId} complementory={bus.complementory} Month={month} />
+                                <BusCards key={index}  BusName={bus.busName} Departure={bus.departureTime} Duration={bus.totalTime} Arrival={bus.arrivalTime} Fare={bus.fare} SeatsAvailable={bus.availableSeats} BusType={bus.busType} FromLocation={bus.startLocation} ToLocation={bus.endLocation} busId={bus.busId} complementory={bus.complementory} Month={month} />
 
                             ))}
+                            {/* <BusCards />
                             <BusCards />
-                            <BusCards />
-                            <BusCards />
+                            <BusCards /> */}
 
                         </div>
                     </div>

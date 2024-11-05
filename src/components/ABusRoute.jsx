@@ -29,8 +29,8 @@ const ABusRoute = () => {
                 setFilteredRoute(routes);
             } else {
                 const filtered = routes.filter(bus => 
-                    bus.RouteName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    bus.RouteId.toString().toLowerCase().includes(searchTerm.toLowerCase())
+                    bus.RouteName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    bus.RouteId?.toString().toLowerCase().includes(searchTerm.toLowerCase())
                 );
                 setFilteredRoute(filtered);
             }
@@ -73,17 +73,17 @@ const ABusRoute = () => {
             </div>
 
             <div className="overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
-                    <thead>
-                        <tr className="bg-gray-200">
-                            <th className="py-3 px-4 border-b">Route ID</th>
-                            <th className="py-3 px-4 border-b">From Location</th>
-                            <th className="py-3 px-4 border-b">To Location</th>
-                            <th className="py-3 px-4 border-b">Duration</th>
-                            <th className="py-3 px-4 border-b">Bus Type</th>
-                            <th className="py-3 px-4 border-b">Actions</th>
-                        </tr>
-                    </thead>
+            <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
+    <thead>
+        <tr className="bg-gray-200">
+            <th className="w-1/5 py-3 px-4 border-b">Route ID</th>
+            <th className="w-1/5 py-3 px-4 border-b">Route Name</th>
+            <th className="w-1/5 py-3 px-4 border-b">From Location</th>
+            <th className="w-1/5 py-3 px-4 border-b">To Location</th>
+            <th className="w-1/5 py-3 px-4 border-b">Duration</th>
+            <th className="w-1/5 py-3 px-4 border-b">Actions</th>
+        </tr>
+    </thead>
                     <TableBody FilteredRoutes={filteredRoute}/>
                 </table>
             </div>

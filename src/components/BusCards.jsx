@@ -5,9 +5,7 @@ import axiosInstance from './AxiosInstance';
 
 function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusType, FromLocation, ToLocation, busId, complementory,Month }) {
     const [isExpanded, setIsExpanded] = useState(false);
-    const [seats, setSeats] = useState([{ SeatNumber: 'S1', IsAvailable: false },
-    { SeatNumber: 'S2', IsAvailable: true },
-    { SeatNumber: 'S3', IsAvailable: true }, { SeatNumber: 'S4', IsAvailable: false }, { SeatNumber: 'S5', IsAvailable: false }, { SeatNumber: 'S6', IsAvailable: false }, { SeatNumber: 'S7', IsAvailable: false }, { SeatNumber: 'S8', IsAvailable: true }, { SeatNumber: 'S9', IsAvailable: true }, { SeatNumber: 'S10', IsAvailable: false }, { SeatNumber: 'S11', IsAvailable: true }, { SeatNumber: 'S12', IsAvailable: false }, { SeatNumber: 'S13', IsAvailable: true }, { SeatNumber: 'S14', IsAvailable: true }, { SeatNumber: 'S15', IsAvailable: false },]); // corrected initialization of seats array
+    const [seats, setSeats] = useState([]); // corrected initialization of seats array
     const [selectedSeats, setSelectedSeats] = useState([]);
     // const [message, setMessage] = useState('');
     const getSeatsString = () => selectedSeats.join(',');
@@ -17,16 +15,20 @@ function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable,
     const sections = complementory ? complementory.split(',') : [];
 
     const navigate = useNavigate();
-
+console.log(isExpanded)
     const toggleExpand = () => {
-        setIsExpanded(!isExpanded);
+        setIsExpanded(prevState => !prevState); 
+
     };
 
     useEffect(() => {
         if (isExpanded) {
+            console.log(isExpanded)
+
+            console.log('hi',isExpanded);
             const fetchSeats = async () => {
                 try {
-                    const response = await axiosInstance.get(`/user/getSeats?busId=${busId}`);
+                    const response = await axiosInstance.post('/user/adminGetSeats',{ busId });
                     setSeats(response.data);
                 } catch (error) {
                     console.error('Error fetching seat data:', error);
@@ -114,11 +116,11 @@ function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable,
                                 <div className="grid grid-cols-2 gap-4">
                                     {seats.slice(0, Math.ceil(seats.length / 2)).map((seat) => (
                                         <div
-                                            key={seat.SeatNumber} // unique seat identifier
-                                            onClick={() => seat.IsAvailable && !seat.IsBlocked && handleSeatSelect(seat.SeatNumber)}
+                                            key={seat.seatNumber} // unique seat identifier
+                                            onClick={() => seat.isAvailable==="true" && !seat.IsBlocked ==="false" && handleSeatSelect(seat.seatNumber)}
                                             className={`w-8 h-8 flex items-center justify-center text-white font-semibold cursor-pointer rounded-md
-                                       ${!seat.IsAvailable || seat.IsBlocked ? 'bg-red-500 cursor-not-allowed' : selectedSeats.includes(seat.SeatNumber) ? 'border-2 border-gray-400' : 'bg-green-500'}`}
-                                            title={!seat.IsAvailable ? "Reserved" : seat.IsBlocked ? "Reserved" : "Available"}
+                                       ${seat.isAvailable ==="false" || seat.IsBlocked==="true" ? 'bg-red-500 cursor-not-allowed' : selectedSeats.includes(seat.seatNumber) ? 'border-2 border-gray-400' : 'bg-green-500'}`}
+                                            title={!seat.isAvailable ? "Reserved" : seat.isBlocked ? "Reserved" : "Available"}
                                         >
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -147,11 +149,11 @@ function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable,
                                 <div className="grid grid-cols-2 gap-4">
                                     {seats.slice(Math.ceil(seats.length / 2)).map((seat, index) => (
                                           <div
-                                          key={seat.SeatNumber} // unique seat identifier
-                                          onClick={() => seat.IsAvailable && !seat.IsBlocked && handleSeatSelect(seat.SeatNumber)}
+                                          key={seat.seatNumber} // unique seat identifier
+                                          onClick={() => seat.isAvailable && !seat.isBlocked && handleSeatSelect(seat.seatNumber)}
                                           className={`w-8 h-8 flex items-center justify-center text-white font-semibold cursor-pointer rounded-md
-                                     ${!seat.IsAvailable || seat.IsBlocked ? 'bg-red-500 cursor-not-allowed' : selectedSeats.includes(seat.SeatNumber) ? 'border-2 border-gray-400' : 'bg-green-500'}`}
-                                          title={!seat.IsAvailable ? "Reserved" : seat.IsBlocked ? "Reserved" : "Available"}
+                                     ${!seat.isAvailable || seat.isBlocked ? 'bg-red-500 cursor-not-allowed' : selectedSeats.includes(seat.seatNumber) ? 'border-2 border-gray-400' : 'bg-green-500'}`}
+                                          title={!seat.isAvailable ? "Reserved" : seat.isBlocked ? "Reserved" : "Available"}
                                       >
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"

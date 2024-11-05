@@ -6,9 +6,7 @@ import axiosInstance from './AxiosInstance';
 function ABC({ BusName, BusNumber,DepartureTime, Duration,ArrivalTime, Fare, AvailableSeats,TotalSeats, BusType, FromLocation, ToLocation, BusId, Complementory,TravelDays,RouteId}) {
     const [isExpanded, setIsExpanded] = useState(false);
 
-    const [seats, setSeats] = useState([{ seatNumber: 'S1', isReserved: false },
-    { seatNumber: 'S2', isReserved: true },
-    { seatNumber: 'S3', isReserved: false }, { seatNumber: 'S4', isReserved: false }, { seatNumber: 'S5', isReserved: false }, { seatNumber: 'S6', isReserved: false }, { seatNumber: 'S7', isReserved: false }, { seatNumber: 'S8', isReserved: false }, { seatNumber: 'S9', isReserved: false }, { seatNumber: 'S10', isReserved: false }, { seatNumber: 'S11', isReserved: false }, { seatNumber: 'S12', isReserved: false }, { seatNumber: 'S13', isReserved: false }, { seatNumber: 'S14', isReserved: false }, { seatNumber: 'S15', isReserved: false },]); // corrected initialization of seats array
+    const [seats, setSeats] = useState([]); // corrected initialization of seats array
 
 // to send to edit model
     const BusDetails = { BusName,BusNumber,  DepartureTime,ArrivalTime, Fare, TotalSeats,BusType, BusId, Complementory,TravelDays,RouteId};
@@ -21,14 +19,14 @@ function ABC({ BusName, BusNumber,DepartureTime, Duration,ArrivalTime, Fare, Ava
     const [isModelOpen, setIsModelOpen] = useState(false);
 
     const ToogleEditModel = () => {
-        setIsModelOpen(!isModelOpen);
+        setIsModelOpen(prevState => !prevState);
     }
 
     useEffect(() => {
         if (isExpanded) {
             const fetchSeats = async () => {
                 try {
-                    const response = await axiosInstance.get(`/user/getSeats?busId=${BusId}`);
+                    const response = await axiosInstance.post('/user/adminGetSeats',{BusId});
                     setSeats(response.data);
                 } catch (error) {
                     console.error('Error fetching seat data:', error);
@@ -139,14 +137,14 @@ function ABC({ BusName, BusNumber,DepartureTime, Duration,ArrivalTime, Fare, Ava
                                     <div className="grid grid-cols-2 gap-4">
                                         {seats.slice(0, Math.ceil(seats.length / 2)).map((seat) => (
                                             <div
-                                                key={seat.SeatNumber} 
-                                                onClick={() => handleSeatSelect(seat.SeatNumber)} 
+                                                key={seat.seatNumber} 
+                                                onClick={() => handleSeatSelect(seat.seatNumber)} 
                                                 className={`w-8 h-8 flex items-center justify-center text-white font-semibold cursor-pointer rounded-md
-                                                        ${!seat.IsAvailable ? 'bg-red-500 cursor-not-allowed' :
-                                                        seat.IsBlocked ? 'bg-yellow-500' : 
-                                                            selectedSeats.includes(seat.SeatNumber) ? 'border-2 border-gray-400' :
+                                                        ${seat.isAvailable ==="false" ? 'bg-red-500 cursor-not-allowed' :
+                                                        seat.isBlocked ==="true" ? 'bg-yellow-500' : 
+                                                            selectedSeats.includes(seat.seatNumber) ? 'border-2 border-gray-400' :
                                                                 'bg-green-500'}`}
-                                                title={!seat.IsAvailable? "Reserved" : seat.IsBlocked ? "Blocked" : "Available"} // Update title for blocked seats
+                                                title={!seat.isAvailable? "Reserved" : seat.isBlocked ? "Blocked" : "Available"} // Update title for blocked seats
                                             >
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
@@ -175,14 +173,14 @@ function ABC({ BusName, BusNumber,DepartureTime, Duration,ArrivalTime, Fare, Ava
                                     <div className="grid grid-cols-2 gap-4">
                                         {seats.slice(Math.ceil(seats.length / 2)).map((seat) => (
                                             <div
-                                                key={seat.SeatNumber} // unique seat identifier
-                                                onClick={() => handleSeatSelect(seat.SeatNumber)} // Allow selection only if the seat is blocked
+                                                key={seat.seatNumber} // unique seat identifier
+                                                onClick={() => handleSeatSelect(seat.seatNumber)} // Allow selection only if the seat is blocked
                                                 className={`w-8 h-8 flex items-center justify-center text-white font-semibold cursor-pointer rounded-md
-                                                        ${!seat.IsAvailable ? 'bg-red-500 cursor-not-allowed' :
-                                                        seat.IsBlocked ? 'bg-yellow-500' : // Optionally use a different color for blocked seats
-                                                            selectedSeats.includes(seat.SeatNumber) ? 'border-2 border-gray-400' :
+                                                        ${seat.IsAvailable==="false" ? 'bg-red-500 cursor-not-allowed' :
+                                                        seat.IsBlocked ==="true"?'bg-yellow-500' : // Optionally use a different color for blocked seats
+                                                            selectedSeats.includes(seat.seatNumber) ? 'border-2 border-gray-400' :
                                                                 'bg-green-500'}`}
-                                                title={!seat.IsAvailable ? "Reserved" : seat.IsBlocked ? "Blocked" : "Available"} // Update title for blocked seats
+                                                title={!seat.isAvailable ? "Reserved" : seat.isBlocked ? "Blocked" : "Available"} // Update title for blocked seats
                                             >
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
