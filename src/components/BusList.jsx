@@ -10,6 +10,7 @@ function BusList() {
     // const [isLoading, setIsLoading] = useState(true);
     // const [firstBusTime, setFirstBusTime] = useState(null);
     // const [lastBusTime, setLastBusTime] = useState(null);
+    console.log('month',month);
 
     const [ac, setAc] = useState(false);
     const [nonAc, setNonAc] = useState(false);
@@ -247,7 +248,7 @@ function BusList() {
                                 </div>
                             </div>
                             {buses.map((bus, index) => (
-                                <BusCards key={index}  BusName={bus.busName} Departure={bus.departureTime} Duration={bus.totalTime} Arrival={bus.arrivalTime} Fare={bus.fare} SeatsAvailable={bus.availableSeats} BusType={bus.busType} FromLocation={bus.startLocation} ToLocation={bus.endLocation} busId={bus.busId} complementory={bus.complementory} Month={month} />
+                                <BusCards key={index}  BusName={bus.busName} Departure={bus.departureTime} Duration={bus.totalTime} Arrival={bus.arrivalTime} Fare={bus.fare} SeatsAvailable={bus.availableSeats} BusType={bus.busType} FromLocation={bus.startLocation} ToLocation={bus.endLocation} busId={bus.busId} complementory={bus.complementory} Month={month} travelDate={travelDate} />
 
                             ))}
                             {/* <BusCards />

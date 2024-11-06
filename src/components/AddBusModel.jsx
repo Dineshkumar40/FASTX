@@ -35,6 +35,7 @@ const AddBusModal = ({ isOpen, onClose }) => {
         try {
             await axiosInstance.post('/user/addBuses', busData);
             resetForm();
+            onclose();
         } catch (error) {
             console.error('Error adding bus:', error);
         }
@@ -52,6 +53,7 @@ const AddBusModal = ({ isOpen, onClose }) => {
         setBusType('');
         setComplementory('');
         setTravelDays('');
+        setFare('');
 
     };
 
@@ -61,7 +63,7 @@ const AddBusModal = ({ isOpen, onClose }) => {
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
             <div className="bg-white rounded-lg shadow-md w-11/12 md:w-2/3 lg:w-1/2 p-6">
                 <h2 className="text-xl font-semibold mb-4">Add Bus</h2>
-                <form onSubmit={handleSubmit}>
+                
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <input
                             type="text"
@@ -162,14 +164,14 @@ const AddBusModal = ({ isOpen, onClose }) => {
                         >
                             Cancel
                         </button>
-                        <button
-                            type="submit"
+                        <button onClick={handleSubmit}
+                            
                             className="text-white bg-red-600 hover:bg-red-700 rounded-lg px-4 py-2"
                         >
                             Add Bus
                         </button>
                     </div>
-                </form>
+                
             </div>
         </div>
     );

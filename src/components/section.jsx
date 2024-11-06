@@ -23,7 +23,7 @@ console.log(month); // Example: "Dec"
         navigate(`/Buses/${fromLocation}/${toLocation}/${travelDate}/${month}`);
         // console.log({ fromLocation, toLocation, travelDate });
     };
-
+console.log('month',month)
     return (
         <section className='overflow-x-hidden'>
             <img className='w-full relative' src={busImage} alt='busImage.png' />

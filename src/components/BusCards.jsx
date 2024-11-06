@@ -3,7 +3,7 @@ import BusComplementory from './BusComplementory';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from './AxiosInstance';
 
-function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusType, FromLocation, ToLocation, busId, complementory,Month }) {
+function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusType, FromLocation, ToLocation, busId,travelDate,complementory,Month }) {
     const [isExpanded, setIsExpanded] = useState(false);
     const [seats, setSeats] = useState([]); // corrected initialization of seats array
     const [selectedSeats, setSelectedSeats] = useState([]);
@@ -13,6 +13,18 @@ function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable,
     const noOfSeats = selectedSeats.length;
     console.log(noOfSeats);
     const sections = complementory ? complementory.split(',') : [];
+
+    const isoDate =travelDate ;
+const date = new Date(isoDate);
+
+// Format the date as "6 November 2024"
+const formattedDate = date.toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+});
+
+console.log(formattedDate);
 
     const navigate = useNavigate();
 console.log(isExpanded)
@@ -39,6 +51,7 @@ console.log(isExpanded)
     }, [isExpanded, busId]);
 
     const handleSeatSelect = (seatNumber) => {
+        console.log("hi")
         setSelectedSeats((prevSelectedSeats) =>
             prevSelectedSeats.includes(seatNumber)
                 ? prevSelectedSeats.filter(seat => seat !== seatNumber)
@@ -117,10 +130,10 @@ console.log(isExpanded)
                                     {seats.slice(0, Math.ceil(seats.length / 2)).map((seat) => (
                                         <div
                                             key={seat.seatNumber} // unique seat identifier
-                                            onClick={() => seat.isAvailable==="true" && !seat.IsBlocked ==="false" && handleSeatSelect(seat.seatNumber)}
-                                            className={`w-8 h-8 flex items-center justify-center text-white font-semibold cursor-pointer rounded-md
-                                       ${seat.isAvailable ==="false" || seat.IsBlocked==="true" ? 'bg-red-500 cursor-not-allowed' : selectedSeats.includes(seat.seatNumber) ? 'border-2 border-gray-400' : 'bg-green-500'}`}
-                                            title={!seat.isAvailable ? "Reserved" : seat.isBlocked ? "Reserved" : "Available"}
+                                            onClick={() => seat.isAvailable==="True" && seat.isBlocked ==="False" && handleSeatSelect(seat.seatNumber)}
+                                            className={`w-8 h-8 flex items-center justify-center text-white font-semibold cursor-pointer rounded-md'
+                                       ${seat.isAvailable ==="False" || seat.isBlocked ==="True" ? 'bg-red-500 cursor-not-allowed' : selectedSeats.includes(seat.seatNumber) ? 'border-2 border-gray-400' : 'bg-green-500'}`}
+                                            title={seat.isAvailable  === 'False'  ? "Reserved" : seat.isBlocked === "True" ? "Reserved" : "Available"}
                                         >
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -148,13 +161,13 @@ console.log(isExpanded)
                                 {/* Right side seats */}
                                 <div className="grid grid-cols-2 gap-4">
                                     {seats.slice(Math.ceil(seats.length / 2)).map((seat, index) => (
-                                          <div
-                                          key={seat.seatNumber} // unique seat identifier
-                                          onClick={() => seat.isAvailable && !seat.isBlocked && handleSeatSelect(seat.seatNumber)}
-                                          className={`w-8 h-8 flex items-center justify-center text-white font-semibold cursor-pointer rounded-md
-                                     ${!seat.isAvailable || seat.isBlocked ? 'bg-red-500 cursor-not-allowed' : selectedSeats.includes(seat.seatNumber) ? 'border-2 border-gray-400' : 'bg-green-500'}`}
-                                          title={!seat.isAvailable ? "Reserved" : seat.isBlocked ? "Reserved" : "Available"}
-                                      >
+                                    <div
+                                    key={seat.seatNumber} // unique seat identifier
+                                    onClick={() => seat.isAvailable==="True" && seat.isBlocked ==="False" && handleSeatSelect(seat.seatNumber)}
+                                    className={`w-8 h-8 flex items-center justify-center text-white font-semibold cursor-pointer rounded-md
+                               ${seat.isAvailable ==="False" || seat.isBlocked ==="True" ? 'bg-red-500 cursor-not-allowed' : selectedSeats.includes(seat.seatNumber) ? 'border-2 border-gray-400' : 'bg-green-500'}`}
+                                    title={seat.isAvailable  === 'False'  ? "Reserved" : seat.isBlocked === "True" ? "Reserved" : "Available"}
+                                >
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="24"
@@ -217,14 +230,14 @@ console.log(isExpanded)
                                 </div>
                                 <div className='ml-4 w-52'>
                                     <div className="mb-2 flex justify-between ">
-                                        <div className="opacity-75">CHENNAI
-                                            <p className='text-red-600 font-bold'>(18)-(oct)-(2024)</p>
+                                        <div className="opacity-75">{FromLocation}
+                                            <p className='text-red-600 font-bold'>{formattedDate}</p>
                                         </div>
-                                        <div className='font-bold'> 19:50</div>
+                                        <div className='font-bold'> {Departure}</div>
                                     </div>
                                     <div className="mb-2 mt-6 flex justify-between">
-                                        <p className="opacity-75">MUMBAII</p>
-                                        <p className='font-bold'> 19:50</p>
+                                        <p className="opacity-75">{ToLocation}</p>
+                                        <p className='font-bold'> {Arrival}</p>
                                     </div>
                                 </div>
                             </div>

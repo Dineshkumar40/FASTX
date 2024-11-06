@@ -14,6 +14,7 @@ function ABC({ BusName, BusNumber,DepartureTime, Duration,ArrivalTime, Fare, Ava
     const [selectedSeats, setSelectedSeats] = useState([]);
     const sections = Complementory ? Complementory.split(',') : [];
     const getSeatsString = () => selectedSeats.join(',');
+    console.log('sections',sections)
 
 
     const [isModelOpen, setIsModelOpen] = useState(false);
@@ -43,7 +44,7 @@ function ABC({ BusName, BusNumber,DepartureTime, Duration,ArrivalTime, Fare, Ava
 
     const handleSeatBlock = async () => {
         try {
-            await axiosInstance.post("/user/blockSeats", {
+            await axiosInstance.post("/user/blockOrUnblock", {
                 busId: BusId,
                 seatNumber: getSeatsString(),
             });
@@ -137,15 +138,15 @@ function ABC({ BusName, BusNumber,DepartureTime, Duration,ArrivalTime, Fare, Ava
                                     <div className="grid grid-cols-2 gap-4">
                                         {seats.slice(0, Math.ceil(seats.length / 2)).map((seat) => (
                                             <div
-                                                key={seat.seatNumber} 
-                                                onClick={() => handleSeatSelect(seat.seatNumber)} 
-                                                className={`w-8 h-8 flex items-center justify-center text-white font-semibold cursor-pointer rounded-md
-                                                        ${seat.isAvailable ==="false" ? 'bg-red-500 cursor-not-allowed' :
-                                                        seat.isBlocked ==="true" ? 'bg-yellow-500' : 
-                                                            selectedSeats.includes(seat.seatNumber) ? 'border-2 border-gray-400' :
-                                                                'bg-green-500'}`}
-                                                title={!seat.isAvailable? "Reserved" : seat.isBlocked ? "Blocked" : "Available"} // Update title for blocked seats
-                                            >
+                                            key={seat.seatNumber} // unique seat identifier
+                                            onClick={() => handleSeatSelect(seat.seatNumber)} // Allow selection only if the seat is blocked
+                                            className={`w-8 h-8 flex items-center justify-center text-white font-semibold cursor-pointer rounded-md
+                                                    ${seat.isAvailable==="False" ? 'bg-red-500 cursor-not-allowed' :
+                                                    seat.isBlocked ==="True"?'bg-yellow-500' : // Optionally use a different color for blocked seats
+                                                        selectedSeats.includes(seat.seatNumber) ? 'border-2 border-gray-400' :
+                                                            'bg-green-500'}`}
+                                            title={seat.isAvailable ==="False" ? "Reserved" : seat.isBlocked ==="True" ? "Blocked" : "Available"} // Update title for blocked seats
+                                        >
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     width="24"
@@ -176,11 +177,11 @@ function ABC({ BusName, BusNumber,DepartureTime, Duration,ArrivalTime, Fare, Ava
                                                 key={seat.seatNumber} // unique seat identifier
                                                 onClick={() => handleSeatSelect(seat.seatNumber)} // Allow selection only if the seat is blocked
                                                 className={`w-8 h-8 flex items-center justify-center text-white font-semibold cursor-pointer rounded-md
-                                                        ${seat.IsAvailable==="false" ? 'bg-red-500 cursor-not-allowed' :
-                                                        seat.IsBlocked ==="true"?'bg-yellow-500' : // Optionally use a different color for blocked seats
+                                                        ${seat.isAvailable==="False" ? 'bg-red-500 cursor-not-allowed' :
+                                                        seat.isBlocked ==="True"?'bg-yellow-500' : // Optionally use a different color for blocked seats
                                                             selectedSeats.includes(seat.seatNumber) ? 'border-2 border-gray-400' :
                                                                 'bg-green-500'}`}
-                                                title={!seat.isAvailable ? "Reserved" : seat.isBlocked ? "Blocked" : "Available"} // Update title for blocked seats
+                                                title={seat.isAvailable ==="False" ? "Reserved" : seat.isBlocked ==="True" ? "Blocked" : "Available"} // Update title for blocked seats
                                             >
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
@@ -217,10 +218,12 @@ function ABC({ BusName, BusNumber,DepartureTime, Duration,ArrivalTime, Fare, Ava
                                     <div className="w-8 h-6 border bg-red-500 rounded-md"></div>
                                     <span>Reserved</span>
                                 </div>
+                               
                                 <div className="flex items-center gap-2">
-                                    <div className="w-8 h-6 border-2 border-gray-400 rounded-md"></div>
-                                    <span>Selected</span>
+                                    <div className="w-8 h-6 border-2 bg-yellow-400 rounded-md"></div>
+                                    <span>Blocked</span>
                                 </div>
+                               
                             </div>
                         </div>
 
