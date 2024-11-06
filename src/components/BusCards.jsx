@@ -59,7 +59,7 @@ console.log(isExpanded)
         );
     };
     const handleReserveSeats = () => {
-        navigate(`/ReservationForm/${busId}/${seatsString}/${FromLocation}/${ToLocation}/${Duration}/${noOfSeats}/${Month}`);
+        navigate(`/ReservationForm/${busId}/${seatsString}/${noOfSeats}/${Month}`);
       };
 
    

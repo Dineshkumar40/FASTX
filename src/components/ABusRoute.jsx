@@ -29,8 +29,8 @@ const ABusRoute = () => {
                 setFilteredRoute(routes);
             } else {
                 const filtered = routes.filter(bus => 
-                    bus.RouteName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    bus.RouteId?.toString().toLowerCase().includes(searchTerm.toLowerCase())
+                    bus.routeName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    bus.routeID?.toString().toLowerCase().includes(searchTerm.toLowerCase())
                 );
                 setFilteredRoute(filtered);
             }
@@ -54,7 +54,7 @@ const ABusRoute = () => {
             <div className="flex items-center mb-4">
                 <input
                     type="text"
-                    placeholder="Search by Route ID, From/To Location"
+                    placeholder="Search by Route ID, routeName"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="border border-gray-300 rounded-lg p-2 flex-grow"

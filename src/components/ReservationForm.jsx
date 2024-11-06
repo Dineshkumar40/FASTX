@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 
 const ReservationForm = () => {
   const [userDetails, setUserDetails] = useState({});
-  const { busId, seatString,FromLocation,ToLocation,Duration,noOfSeats,Month } = useParams();
+  const { busId, seatString,noOfSeats,Month } = useParams();
   console.log(seatString);
   const seatNumbers = seatString.split(',');
   console.log(seatNumbers);
@@ -19,15 +19,16 @@ const ReservationForm = () => {
       },
     }));
   };
+  console.log('busId',busId)
+  console.log('noOfSeats',noOfSeats)
+console.log('seatString',seatString)
+console.log('Month',Month)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const reservationData = {
         busId,
-        FromLocation,
-        ToLocation,
-        Duration,
         month:Month,
         noOfSeats,
         seatNumbers,
@@ -36,9 +37,9 @@ const ReservationForm = () => {
           ...userDetails[seatNumber],
         })),
       };
-
+console.log('reservationData',reservationData)
     try {
-      await axios.post('/user/reservations', reservationData);
+      await axios.post('/user/bookingDetails', reservationData);
     //   console.log('Booking confirmed!', reservationData);
       // Redirect or show a confirmation message here
     } catch (error) {
@@ -50,7 +51,7 @@ const ReservationForm = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 p-6 rounded-lg shadow-lg bg-white">
         <h2 className="text-center text-2xl font-bold text-gray-700">Passenger Details</h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <div  className="space-y-6">
           {seatNumbers.map(seatNumber => (
             <div key={seatNumber} className="border-b border-gray-200 pb-4 mb-4">
               <h3 className="text-xl font-semibold text-gray-700 mb-2">Seat {seatNumber}</h3>
@@ -104,14 +105,14 @@ const ReservationForm = () => {
           ))}
           <div className="flex justify-end">
             <button
-              type="submit"
+             onClick={handleSubmit}
               className="px-4 py-2 bg-red-600 text-white rounded-md shadow-sm hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               Confirm Reservation
             </button>
             
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

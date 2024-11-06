@@ -19,7 +19,7 @@ function App() {
         <Route path="/Buses/:fromLocation/:toLocation/:travelDate/:month" element={<Buses />} />
         <Route path="/AdminBusList" element={<AdminBusList/>}/>
         <Route path='/ADminBusRoute' element={<ABusRoute/>}/>
-        <Route path='/ReservationForm/:BusId/:seatString/:fromLocation/:toLocation/:duration/:noOfSeats/:month' element={<ReservationForm />} />
+        <Route path='/ReservationForm/:busId/:seatString/:noOfSeats/:Month' element={<ReservationForm />} />
         </Routes>
     </Router>
   );
