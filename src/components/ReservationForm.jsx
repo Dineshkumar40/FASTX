@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axiosInstance from './AxiosInstance';
 import { useParams } from 'react-router-dom';
 
 
@@ -39,7 +39,7 @@ console.log('Month',Month)
       };
 console.log('reservationData',reservationData)
     try {
-      await axios.post('/user/bookingDetails', reservationData);
+      await axiosInstance.post('/user/bookingDetails', reservationData);
     //   console.log('Booking confirmed!', reservationData);
       // Redirect or show a confirmation message here
     } catch (error) {
