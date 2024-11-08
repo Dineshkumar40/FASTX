@@ -21,7 +21,7 @@ const date = new Date(isoDate);
 const formattedDate = date.toLocaleDateString("en-US", {
     day: "numeric",
     month: "long",
-    year: "numeric",
+    // year: "numeric",
 });
 
 console.log(formattedDate);
@@ -40,7 +40,7 @@ console.log(isExpanded)
             console.log('hi',isExpanded);
             const fetchSeats = async () => {
                 try {
-                    const response = await axiosInstance.post('/user/adminGetSeats',{ busId });
+                    const response = await axiosInstance.post('/user/adminGetSeats',{ busId },{headers:{Authorization : `Bearer ${localStorage.getItem("JWTToken")}`}});
                     setSeats(response.data);
                 } catch (error) {
                     console.error('Error fetching seat data:', error);

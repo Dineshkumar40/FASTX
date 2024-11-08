@@ -7,6 +7,7 @@ import HomePage from './components/HomePage';
 import ReservationForm from './components/ReservationForm';
 import AuthForm from './components/AuthForm';
 import AdminHomePage from './components/AdminHome';
+import UserViewBookings from './components/UserViewBooking';
 
 function App() {
   const userRole = localStorage.getItem("RoleType"); 
@@ -20,19 +21,22 @@ function App() {
 
         <Route
           path="/AdminHome"
-          element={userRole === 'admin' ? <AdminHomePage /> : <Navigate to="/access-denied" />}
+          element={userRole === 'Administrator' ? <AdminHomePage /> : <Navigate to="/access-denied" />}
         />
         
         <Route
           path="/AdminBusList"
-          element={userRole === 'admin' ? <AdminBusList /> : <Navigate to="/access-denied" />}
+          element={userRole === 'Administrator' ? <AdminBusList /> : <Navigate to="/access-denied" />}
         />
         <Route
           path="/ADminBusRoute"
-          element={userRole === 'admin' ? <ABusRoute /> : <Navigate to="/access-denied" />}
+          element={userRole === 'Administrator' ? <ABusRoute /> : <Navigate to="/access-denied" />}
         />
         
         <Route path="/ReservationForm/:busId/:seatString/:noOfSeats/:Month" element={<ReservationForm />} />
+        <Route path="/UserViewBooking" 
+        element = {userRole ==='User' ? <UserViewBookings/> :  <Navigate to="/access-denied" /> }
+        />
 
         <Route path="/access-denied" element={<p className="mx-auto my-auto text-centre">Access Denied: Unauthorized Access</p>
 } />

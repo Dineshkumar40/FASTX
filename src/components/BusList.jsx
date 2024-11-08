@@ -84,7 +84,7 @@ function BusList() {
         }
         console.log("fetchbuses", request);
         // setIsLoading(true);
-        axiosInstance.post('/user/searchbuses', request)
+        axiosInstance.post('/user/searchbuses', request,{headers:{Authorization:`Bearer ${localStorage.getItem("JWTToken")}`}})
             .then((response) => {
                 console.log('response.data',response.data)
                 setBuses(response.data);
@@ -157,7 +157,7 @@ function BusList() {
 
 
             <Navbar />
-            <div className="mt-5">
+            <div className="mt-5 mb-7">
                 <div className="flex gap-8">
                     {/* Filters Sidebar */}
                     <div className="w-1/6 bg-white p-6">

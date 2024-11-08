@@ -48,15 +48,18 @@ function AuthForm() {
 
     try {
         console.log("logFormData", logFormData);
-        const response = await axiosInstance.post('/user/checkAuth', logFormData);
+        const response = await axiosInstance.post('/login/checkAuth', logFormData);
 
         console.log('Reservation successful:', response.data);
-        const { roleType, userid} = response.data;
-        if (userid && roleType) {
-          localStorage.setItem("UserId", userid);
+        const { roleType, userId, jwtToken} = response.data;
+        if (userId && roleType && jwtToken ) {
+          localStorage.setItem("UserId", userId);
           localStorage.setItem("RoleType", roleType);
-          console.log(localStorage.getItems("UserId"));
-          console.log(localStorage.getItems("RoleType"));
+          localStorage.setItem("JWTToken", jwtToken);
+
+          console.log('hi',localStorage.getItem("UserId"));
+          console.log(localStorage.getItem("RoleType"));
+          console.log(localStorage.getItem("JWTToken"));
         }
         
         if(roleType === "Administrator ")
@@ -86,7 +89,7 @@ const handleSubmit = async (e) => {
   
     try {
         console.log('formData',formData)
-      const response = await axiosInstance.post('/user/toAuth', dataToSubmit);    
+      const response = await axiosInstance.post('/login/toAuth', dataToSubmit);    
       console.log("Form submitted successfully", response.data);    
   
       setError("Login Successfull Proceed to logIn");

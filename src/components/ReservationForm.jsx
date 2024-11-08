@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import axiosInstance from './AxiosInstance';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 const ReservationForm = () => {
   const [userDetails, setUserDetails] = useState({});
   const { busId, seatString,noOfSeats,Month } = useParams();
-  console.log(seatString);
+  const navigate = useNavigate();
+  console.log('seatString',seatString);
   const seatNumbers = seatString.split(',');
   console.log(seatNumbers);
 
@@ -19,6 +21,7 @@ const ReservationForm = () => {
       },
     }));
   };
+  console.log('seatNumbers',seatNumbers)
   console.log('busId',busId)
   console.log('noOfSeats',noOfSeats)
 console.log('seatString',seatString)
@@ -28,20 +31,22 @@ console.log('Month',Month)
     e.preventDefault();
 
     const reservationData = {
+        userId:localStorage.getItem("UserId"),
         busId,
         month:Month,
         noOfSeats,
-        seatNumbers,
-        passengerDetails: seatNumbers.map(seatNumber => ({
+        seatNumbers:seatString,
+        passengerInformation: seatNumbers.map(seatNumber => ({
           seatNumber,
           ...userDetails[seatNumber],
         })),
       };
-console.log('reservationData',reservationData)
+console.log('reservationData1',reservationData)
     try {
-      await axiosInstance.post('/user/bookingDetails', reservationData);
-    //   console.log('Booking confirmed!', reservationData);
-      // Redirect or show a confirmation message here
+      await axiosInstance.post('/user/bookingDetails', reservationData,{headers : {Authorization:`Bearer ${localStorage.getItem("JWTToken")}`}});
+      console.log('Booking confirmed!', reservationData);
+      navigate('/UserViewBooking');
+
     } catch (error) {
       console.error('Error submitting reservation:', error);
     }
@@ -106,7 +111,7 @@ console.log('reservationData',reservationData)
           <div className="flex justify-end">
             <button
              onClick={handleSubmit}
-              className="px-4 py-2 bg-red-600 text-white rounded-md shadow-sm hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="px-4 py-2 bg-red-600 text-white rounded-md shadow-sm hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               Confirm Reservation
             </button>
