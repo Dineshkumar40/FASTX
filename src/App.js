@@ -1,12 +1,12 @@
 import React from "react";
-import { Route, BrowserRouter as Router, Routes, Navigate } from 'react-router-dom';
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import ABusRoute from './components/ABusRoute';
 import AdminBusList from './components/AdminBusList';
+import AdminHomePage from './components/AdminHome';
+import AuthForm from './components/AuthForm';
 import Buses from './components/BusList';
 import HomePage from './components/HomePage';
 import ReservationForm from './components/ReservationForm';
-import AuthForm from './components/AuthForm';
-import AdminHomePage from './components/AdminHome';
 import UserViewBookings from './components/UserViewBooking';
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
     <Router>
       <Routes>     
         <Route path="/" element={<AuthForm />} />
-        <Route path="/HomePage" element={<HomePage />} />
+        <Route path="/HomePage" element={ userRole === 'User' ? <HomePage /> :<Navigate to="/access-denied" /> } />
         <Route path="/Buses/:fromLocation/:toLocation/:travelDate/:month" element={<Buses />} />
 
         <Route
@@ -33,7 +33,8 @@ function App() {
           element={userRole === 'Administrator' ? <ABusRoute /> : <Navigate to="/access-denied" />}
         />
         
-        <Route path="/ReservationForm/:busId/:seatString/:noOfSeats/:Month" element={<ReservationForm />} />
+        <Route path="/ReservationForm/:busId/:seatString/:noOfSeats/:Month" element={ userRole === 'User' ? <ReservationForm /> : <Navigate to="/access-denied" />} />
+
         <Route path="/UserViewBooking" 
         element = {userRole ==='User' ? <UserViewBookings/> :  <Navigate to="/access-denied" /> }
         />
