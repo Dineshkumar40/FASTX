@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
 import busLogo from '../assets/bus.svg'
+import {  useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const HandleLogout = ()=>{
+    localStorage.removeItem('JWTToken');
+    localStorage.removeItem('UserType')
+    navigate('/')
+  }
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -24,9 +32,7 @@ const Navbar = () => {
             <li className='hover:bg-red-600 hover:rounded-2xl hover:text-slate-100 border-b-2 border-rose-500  p-2 ease-in-out cursor-pointer'>
               About
             </li>
-            <li className='hover:bg-red-600 hover:rounded-2xl hover:text-slate-100 border-b-2 border-rose-500 p-2 ease-in-out cursor-pointer'>
-              Language
-            </li>
+           
             <li className='hover:bg-red-600 hover:rounded-2xl hover:text-slate-100 border-b-2 border-rose-500 p-2 ease-in-out cursor-pointer'>
               Help
             </li>
@@ -58,9 +64,9 @@ const Navbar = () => {
                 <div className='absolute right-0 mt-10 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10'>
                   <ul className='py-2 border border-red-200 '>
                     <li className='px-4 py-2 hover:bg-gray-100 text-black cursor-pointer'>My Profile</li>
-                    <li className='px-4 py-2 hover:bg-gray-100 text-black cursor-pointer'>Bookings</li>
-                    <li className='px-4 py-2 hover:bg-gray-100 text-black cursor-pointer'>Settings</li>
-                    <li className='px-4 py-2 hover:bg-gray-100 text-black cursor-pointer'>Logout</li>
+                    <li   onClick={() => navigate('/UserViewBooking')} className='px-4 py-2 hover:bg-gray-100 text-black cursor-pointer'>Bookings</li>
+                    {/* <li className='px-4 py-2 hover:bg-gray-100 text-black cursor-pointer'>Settings</li> */}
+                    <li onClick={HandleLogout} className='px-4 py-2 hover:bg-gray-100 text-black cursor-pointer'>Logout</li>
                   </ul>
                 </div>
               )}

@@ -12,8 +12,12 @@ const ABusRoute = () => {
     useEffect(() => {
         const fetchRoutes = async () => {
             try {
-                const response = await axiosInstance.get('/user/getRoutes'); 
-                setRoutes(response.data);
+                const response = await axiosInstance.get('/user/getRoutes', {
+                    headers: {
+                      Authorization: `Bearer ${localStorage.getItem('JWTToken')}`,
+                    },
+                  });                
+                  setRoutes(response.data);
                 setFilteredRoute(response.data);
             } catch (error) {
                 console.error('Error fetching routes:', error);

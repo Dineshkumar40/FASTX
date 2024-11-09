@@ -27,8 +27,12 @@ function ABC({ BusName, BusNumber,DepartureTime, Duration,ArrivalTime, Fare, Ava
         if (isExpanded) {
             const fetchSeats = async () => {
                 try {
-                    const response = await axiosInstance.post('/user/adminGetSeats',{BusId});
-                    setSeats(response.data);
+                    const response = await axiosInstance.post('/user/adminGetSeats', { BusId }, {
+                        headers: {
+                          Authorization: `Bearer ${localStorage.getItem('JWTToken')}`,
+                        },
+                      });                    
+                      setSeats(response.data);
                 } catch (error) {
                     console.error('Error fetching seat data:', error);
                 }
@@ -47,7 +51,11 @@ function ABC({ BusName, BusNumber,DepartureTime, Duration,ArrivalTime, Fare, Ava
             await axiosInstance.post("/user/blockOrUnblock", {
                 busId: BusId,
                 seatNumber: getSeatsString(),
-            });
+              }, {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('JWTToken')}`,
+                },
+              });
             setSelectedSeats([]);
         } catch (error) {
             console.error('Error reserving seats:', error);

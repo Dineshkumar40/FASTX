@@ -32,8 +32,12 @@ function EditBus({ BusesData, ToggleModal, IsModelOpen }) {
         };
 
         try {
-            await axiosInstance.put('/user/editBuses', busData);
-            resetForm();
+            await axiosInstance.put('/user/editBuses', busData, {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('JWTToken')}`,
+                },
+              });            
+              resetForm();
             ToggleModal(); // Close modal on successful submit
         } catch (error) {
             console.error('Error updating bus:', error);

@@ -20,8 +20,12 @@ function AddRouteModal({ isOpen, toggleModal, }) {
         try {
             console.log("hi1",newRoute);
 
-            await axiosInstance.post('/user/addRoutes', newRoute);
-                        console.log("hi",newRoute);
+            await axiosInstance.post('/user/addRoutes', newRoute, {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('JWTToken')}`,
+                },
+              });                        
+              console.log("hi",newRoute);
 
             // onRouteAdded(newRoute); 
             resetForm();

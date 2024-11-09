@@ -4,6 +4,7 @@ import ABusRoute from './components/ABusRoute';
 import AdminBusList from './components/AdminBusList';
 import AdminHomePage from './components/AdminHome';
 import AuthForm from './components/AuthForm';
+import Aviewseats from "./components/Aviewseats";
 import Buses from './components/BusList';
 import HomePage from './components/HomePage';
 import ReservationForm from './components/ReservationForm';
@@ -22,6 +23,10 @@ function App() {
         <Route
           path="/AdminHome"
           element={userRole === 'Administrator' ? <AdminHomePage /> : <Navigate to="/access-denied" />}
+        />
+         <Route
+          path="/Aviewseats"
+          element={userRole === 'Administrator' ? <Aviewseats/> : <Navigate to="/access-denied" />}
         />
         
         <Route

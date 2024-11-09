@@ -12,7 +12,11 @@ const AdminBusList = () => {
     useEffect(() => {
         const fetchBuses = async () => {
             try {
-                const response = await axiosInstance.get('/user/adminGetBuses');
+                const response = await axiosInstance.get('/user/adminGetBuses', {
+                    headers: {
+                      Authorization: `Bearer ${localStorage.getItem('JWTToken')}`,
+                    },
+                  });               
                 setBuses(response.data);
                 setFilteredBuses(response.data);
             } catch (error) {

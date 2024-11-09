@@ -33,7 +33,11 @@ const AddBusModal = ({ isOpen, onClose }) => {
         };
 
         try {
-            await axiosInstance.post('/user/addBuses', busData);
+            await axiosInstance.post('/user/addBuses', busData, {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('JWTToken')}`,
+                },
+              });            
             resetForm();
             onclose();
         } catch (error) {
