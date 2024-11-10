@@ -62,8 +62,9 @@ function AuthForm() {
           console.log(localStorage.getItem("JWTToken"));
         }
         
-        if(roleType === "Administrator ")
+        if(roleType === "Administrator")
         {
+          console.log("h1")
             navigate('/AdminHome');
         }
         else

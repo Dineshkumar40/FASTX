@@ -1,6 +1,7 @@
 // AddRouteModal.jsx
 import React, { useState } from 'react';
 import axiosInstance from './AxiosInstance';
+import { useNavigate } from 'react-router-dom';
 
 function AddRouteModal({ isOpen, toggleModal, }) {
     const [routeId, setRouteId] = useState('');
@@ -8,6 +9,7 @@ function AddRouteModal({ isOpen, toggleModal, }) {
     const [endLocation, setToLocation] = useState('');
     const [duration, setDuration] = useState('');
     const [routeName, setRouteName] = useState('');
+    const navigate = useNavigate();
 
 
     const handleAddRoute = async (e) => {
@@ -26,6 +28,7 @@ function AddRouteModal({ isOpen, toggleModal, }) {
                 },
               });                        
               console.log("hi",newRoute);
+              navigate('/ADminBusRoute');
 
             // onRouteAdded(newRoute); 
             resetForm();

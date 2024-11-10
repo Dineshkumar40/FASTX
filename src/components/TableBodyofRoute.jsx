@@ -3,10 +3,11 @@ import React from 'react';
 import { useState } from 'react';
 import EditRouteModal from './EditRouteModal';
 import axiosInstance from './AxiosInstance';
+import { useNavigate } from 'react-router-dom';
 // import { useNavigate } from 'react-router-dom';
 const TableBody = ({ FilteredRoutes }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
 
     const toggleModal = () => {
@@ -19,12 +20,15 @@ const TableBody = ({ FilteredRoutes }) => {
                 data: { routeId: RouteId },
                 headers: {
                   Authorization: `Bearer ${localStorage.getItem('JWTToken')}`,
+
                 },
               });        
                   // navigate('/ADminBusRoute');
             console.log('Route with ID deleted successfully.');
+            navigate('/ADminBusRoute')
 
-        } catch (error) {
+        } 
+        catch (error) {
             console.error('Error deleting route:', error);
         }
     };

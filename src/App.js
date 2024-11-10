@@ -1,4 +1,5 @@
 import React from "react";
+import { useState,useEffect } from "react";
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import ABusRoute from './components/ABusRoute';
 import AdminBusList from './components/AdminBusList';
@@ -11,7 +12,25 @@ import ReservationForm from './components/ReservationForm';
 import UserViewBookings from './components/UserViewBooking';
 
 function App() {
-  const userRole = localStorage.getItem("RoleType"); 
+  const [userRole, setUserRole] = useState(localStorage.getItem("RoleType")); // Initialize from localStorage
+
+  console.log('userRole1',userRole) 
+
+  // Listen for storage changes (e.g., when another tab updates localStorage)
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setUserRole(localStorage.getItem("RoleType"));
+    };
+
+    // Set up the listener
+    window.addEventListener('storage', handleStorageChange);
+
+    // Clean up the listener when the component is unmounted
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+  console.log('userRole2',userRole) 
 
   return (
     <Router>
