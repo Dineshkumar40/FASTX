@@ -2,21 +2,28 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from './AxiosInstance';
 import Navbar from './navbar';
 import Footer from './footer';
+import { useSelector } from 'react-redux';
+
 
 function UserViewBooking() {
   const [bookingDetails, setBookingDetails] = useState([]);
-  const userid = localStorage.getItem("UserId");
+  const userRole = useSelector((state) => state.auth);
+  const jwtToken = userRole?.jwtToken;
+  const userid =  userRole?.userId;
+
 
   useEffect(() => {
     const fetchBookingData = async () => {
-      try {
+      try 
+      {
         const response = await axiosInstance.post('/user/userGetBookingDetails', { userid }, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('JWTToken')}`,
+            Authorization: `Bearer ${jwtToken}`,
           },
         });
         setBookingDetails(response.data);
-      } catch (error) {
+      } 
+      catch (error) {
         console.error('Error fetching booking details:', error);
       }
     };

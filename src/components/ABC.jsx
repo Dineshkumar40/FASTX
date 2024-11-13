@@ -2,9 +2,14 @@ import React, { useState, useEffect } from 'react';
 import BusComplementory from './BusComplementory';
 import EditBus from './EditBus';
 import axiosInstance from './AxiosInstance';
+import { useSelector } from 'react-redux';
+
 
 function ABC({ BusName, BusNumber,DepartureTime, Duration,ArrivalTime, Fare, AvailableSeats,TotalSeats, BusType, FromLocation, ToLocation, BusId, Complementory,TravelDays,RouteId}) {
     const [isExpanded, setIsExpanded] = useState(false);
+    const userRole = useSelector((state) => state.auth);
+    const jwtToken = userRole?.jwtToken;
+
 
     const [seats, setSeats] = useState([]); // corrected initialization of seats array
 
@@ -23,20 +28,22 @@ function ABC({ BusName, BusNumber,DepartureTime, Duration,ArrivalTime, Fare, Ava
         setIsModelOpen(prevState => !prevState);
     }
 
+    const fetchSeats = async () => {
+        try {
+            const response = await axiosInstance.post('/user/adminGetSeats', { BusId }, {
+                headers: {
+                    Authorization: `Bearer ${jwtToken}`,
+                },
+              });                    
+              setSeats(response.data);
+              
+        } catch (error) {
+            console.error('Error fetching seat data:', error);
+        }
+    };
     useEffect(() => {
         if (isExpanded) {
-            const fetchSeats = async () => {
-                try {
-                    const response = await axiosInstance.post('/user/adminGetSeats', { BusId }, {
-                        headers: {
-                          Authorization: `Bearer ${localStorage.getItem('JWTToken')}`,
-                        },
-                      });                    
-                      setSeats(response.data);
-                } catch (error) {
-                    console.error('Error fetching seat data:', error);
-                }
-            };
+            
             fetchSeats();
         }
     }, [isExpanded, BusId]);
@@ -53,10 +60,11 @@ function ABC({ BusName, BusNumber,DepartureTime, Duration,ArrivalTime, Fare, Ava
                 seatNumber: getSeatsString(),
               }, {
                 headers: {
-                  Authorization: `Bearer ${localStorage.getItem('JWTToken')}`,
+                  Authorization: `Bearer ${jwtToken}`,
                 },
               });
             setSelectedSeats([]);
+            await fetchSeats();
         } catch (error) {
             console.error('Error reserving seats:', error);
         }

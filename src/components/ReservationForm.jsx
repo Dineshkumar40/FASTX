@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import axiosInstance from './AxiosInstance';
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 
 const ReservationForm = () => {
   const [userDetails, setUserDetails] = useState({});
   const { busId, seatString,noOfSeats,Month } = useParams();
+  const userRole = useSelector((state) => state.auth);
+  const jwtToken = userRole?.jwtToken;
+
   const navigate = useNavigate();
   console.log('seatString',seatString);
   const seatNumbers = seatString.split(',');
@@ -43,7 +47,7 @@ console.log('Month',Month)
       };
 console.log('reservationData1',reservationData)
     try {
-      await axiosInstance.post('/user/bookingDetails', reservationData,{headers : {Authorization:`Bearer ${localStorage.getItem("JWTToken")}`}});
+      await axiosInstance.post('/user/bookingDetails', reservationData,{headers : {Authorization: `Bearer ${jwtToken}`}});
       console.log('Booking confirmed!', reservationData);
       navigate('/UserViewBooking');
 

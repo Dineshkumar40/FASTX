@@ -1,22 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import AdminBusCard from './ABC';
 import AddBusModal from './AddBusModel'; // Import the modal component
 import axiosInstance from './AxiosInstance';
+import { useSelector } from 'react-redux';
 
 const AdminBusList = () => {
     const [buses, setBuses] = useState([]);
     const [filteredBuses, setFilteredBuses] = useState([]);
     const [searchValue, setSearchValue] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility state
+    const userRole = useSelector((state) => state.auth);
+    const jwtToken = userRole?.jwtToken;
+    const timeoutRef = useRef(null); // Store the timeout ID for debouncing
+  
+    const onBusAdded = (newBus) => {
+        setBuses((prevBuses) => [...prevBuses, newBus]); // Add new bus to buses
+        setFilteredBuses((prevFilteredBuses) => [...prevFilteredBuses, newBus]); // Add new bus to filteredBuses
+    };
 
     useEffect(() => {
         const fetchBuses = async () => {
             try {
                 const response = await axiosInstance.get('/user/adminGetBuses', {
                     headers: {
-                      Authorization: `Bearer ${localStorage.getItem('JWTToken')}`,
+                        Authorization: `Bearer ${jwtToken}`,
                     },
-                  });               
+                });
                 setBuses(response.data);
                 setFilteredBuses(response.data);
             } catch (error) {
@@ -25,24 +34,29 @@ const AdminBusList = () => {
         };
 
         fetchBuses();
-    }, []);
+    }, [jwtToken]);
 
-    useEffect(() => {
-        const handler = setTimeout(() => {
-            if (searchValue === '') {
-                setFilteredBuses(buses);
-            } else {
-                const filtered = buses.filter(bus => 
-                    bus.busName.toLowerCase().includes(searchValue.toLowerCase()) ||
-                    bus.busId.toString().toLowerCase().includes(searchValue.toLowerCase())
-                );
-                setFilteredBuses(filtered);
-            }
-        }, 500); 
-        return () => clearTimeout(handler);
-    }, [searchValue, buses]);
+    const handleSearch = (e) => {
+        setSearchValue(e.target.value);
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current); // Clear previous timeout
+        }
+        timeoutRef.current = setTimeout(() => {
+            filterBuses(e.target.value); // Apply filtering after debounce delay
+        }, 500); // Adjust delay as needed
+    };
 
-    const handleSearch = (e) => setSearchValue(e.target.value);
+    const filterBuses = (search) => {
+        if (search === '') {
+            setFilteredBuses(buses); // Show all buses if search is empty
+        } else {
+            const filtered = buses.filter(bus => 
+                bus.busName.toLowerCase().includes(search.toLowerCase()) ||
+                bus.busId.toString().toLowerCase().includes(search.toLowerCase())
+            );
+            setFilteredBuses(filtered);
+        }
+    };
 
     const toggleModal = () => setIsModalOpen(!isModalOpen); // Toggle modal open/close
 
@@ -120,10 +134,9 @@ const AdminBusList = () => {
                             RouteId={bus.routeId}
                         />
                     ))}
-                    
 
                     {/* AddBusModal */}
-                    <AddBusModal isOpen={isModalOpen} onClose={toggleModal} />
+                    <AddBusModal isOpen={isModalOpen} onClose={toggleModal} onBusAdded={onBusAdded} />
                 </div>
             </div>
         </div>

@@ -1,31 +1,46 @@
 // TableBody.js
 import React from 'react';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import EditRouteModal from './EditRouteModal';
 import axiosInstance from './AxiosInstance';
-import { useNavigate } from 'react-router-dom';
 // import { useNavigate } from 'react-router-dom';
-const TableBody = ({ FilteredRoutes }) => {
+import { useSelector } from 'react-redux';
+
+// import { useNavigate } from 'react-router-dom';
+const TableBody = ({ FilteredRoutes,onRouteDelete }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+    // const navigate = useNavigate();
+    const userRole = useSelector((state) => state.auth);
+    const jwtToken = userRole?.jwtToken;
+
 
 
     const toggleModal = () => {
         setIsModalOpen(!isModalOpen);
     };
+    useEffect(() => {
+        if (FilteredRoutes.length > 0) {
+            setLoading(false);  // Set loading to false once data is available
+        }
+    }, [FilteredRoutes]);
+    if (loading) {
+        return <div>Loading...</div>;  // Loading indicator while fetching data
+    }
 
     const onDelete = async (RouteId) => {
         try {
             await axiosInstance.delete('/user/deleteRoute/', {
                 data: { routeId: RouteId },
                 headers: {
-                  Authorization: `Bearer ${localStorage.getItem('JWTToken')}`,
+                   Authorization: `Bearer ${jwtToken}`,
 
                 },
               });        
+              onRouteDelete(RouteId);
+              
                   // navigate('/ADminBusRoute');
             console.log('Route with ID deleted successfully.');
-            navigate('/ADminBusRoute')
 
         } 
         catch (error) {
@@ -45,7 +60,7 @@ const TableBody = ({ FilteredRoutes }) => {
                     <td className="w-1/5 text-center">{route.routeName}</td>
                     <td className="w-1/5 text-center">{route.startLocation}</td>
                     <td className="w-1/5 text-center">{route.endLocation}</td>
-                    <td className="w-1/5 text-center">{route.totalTime}</td>
+                    <td className="w-1/5 text-center">{route.totalTime ? route.totalTime:"na"}</td>
                     <td className="w-1/5 text-center">
                         {/* <button className="text-blue-600 hover:underline " onClick={toggleModal}>Edit</button> */}
                         <button

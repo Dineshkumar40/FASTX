@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import axiosInstance from './AxiosInstance';
+import { useSelector } from 'react-redux';
 
-const AddBusModal = ({ isOpen, onClose }) => {
+
+const AddBusModal = ({ isOpen, onClose,onBusAdded }) => {
     const [busId, setBusId] = useState('');
     const [busName, setBusName] = useState('');
     const [departureTime, setDepartureTime] = useState('');
@@ -13,6 +15,9 @@ const AddBusModal = ({ isOpen, onClose }) => {
     const[busType,setBusType]=useState('');
     const[travelDays,setTravelDays]=useState('');
     const[busNumber,setBusNUmber] = useState('');
+    const userRole = useSelector((state) => state.auth);
+    const jwtToken = userRole?.jwtToken;
+
 
 
     const handleSubmit = async (e) => {
@@ -35,9 +40,10 @@ const AddBusModal = ({ isOpen, onClose }) => {
         try {
             await axiosInstance.post('/user/addBuses', busData, {
                 headers: {
-                  Authorization: `Bearer ${localStorage.getItem('JWTToken')}`,
+                  Authorization: `Bearer ${jwtToken}`,
                 },
-              });            
+              });     
+              onBusAdded(busData);       
             resetForm();
             onclose();
         } catch (error) {

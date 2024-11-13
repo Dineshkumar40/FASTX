@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import axiosInstance from './AxiosInstance';
+import { useSelector } from 'react-redux';
+
 
 function EditBus({ BusesData, ToggleModal, IsModelOpen }) {
+    const userRole = useSelector((state) => state.auth);
+    const jwtToken = userRole?.jwtToken;
+  
     const [busId, setBusId] = useState(BusesData.BusId || '');
     const [busName, setBusName] = useState(BusesData.BusName || '');
     const [departureTime, setDepartureTime] = useState(BusesData.DepartureTime || '');
@@ -34,7 +39,7 @@ function EditBus({ BusesData, ToggleModal, IsModelOpen }) {
         try {
             await axiosInstance.put('/user/editBuses', busData, {
                 headers: {
-                  Authorization: `Bearer ${localStorage.getItem('JWTToken')}`,
+                    Authorization: `Bearer ${jwtToken}`
                 },
               });            
               resetForm();

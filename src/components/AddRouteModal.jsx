@@ -2,14 +2,19 @@
 import React, { useState } from 'react';
 import axiosInstance from './AxiosInstance';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-function AddRouteModal({ isOpen, toggleModal, }) {
+
+function AddRouteModal({ isOpen, toggleModal,onRouteAdded }) {
     const [routeId, setRouteId] = useState('');
     const [startLocation, setFromLocation] = useState('');
     const [endLocation, setToLocation] = useState('');
     const [duration, setDuration] = useState('');
     const [routeName, setRouteName] = useState('');
     const navigate = useNavigate();
+    const userRole = useSelector((state) => state.auth);
+    const jwtToken = userRole?.jwtToken;
+
 
 
     const handleAddRoute = async (e) => {
@@ -24,13 +29,13 @@ function AddRouteModal({ isOpen, toggleModal, }) {
 
             await axiosInstance.post('/user/addRoutes', newRoute, {
                 headers: {
-                  Authorization: `Bearer ${localStorage.getItem('JWTToken')}`,
+                    Authorization: `Bearer ${jwtToken}`,
                 },
               });                        
               console.log("hi",newRoute);
               navigate('/ADminBusRoute');
 
-            // onRouteAdded(newRoute); 
+            onRouteAdded(newRoute); 
             resetForm();
             toggleModal(); // Close modal
         } catch (error) {

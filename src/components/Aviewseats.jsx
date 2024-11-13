@@ -1,17 +1,20 @@
 import React from 'react'
 import axiosInstance from './AxiosInstance';
+import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
+
 
 function Aviewseats(){
     const [bookingDetails, setBookingDetails] = useState([]);
-    const userid = localStorage.getItem("UserId");
-  
-    useEffect(() => {
+    const userRole = useSelector((state) => state.auth);
+    const jwtToken = userRole?.jwtToken;
+    console.log(jwtToken)
+      useEffect(() => {
       const fetchBookingData = async () => {
         try {
           const response = await axiosInstance.get('/user/adminGetBookingDetails', {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('JWTToken')}`,
+              Authorization: `Bearer ${jwtToken}`,
             },
           });
           setBookingDetails(response.data);
@@ -21,7 +24,7 @@ function Aviewseats(){
       };
   
       fetchBookingData();
-    }, [userid]);
+    }, []);
   
     return (
       <div className="max-w-md mx-auto  bg-gray-50 rounded-lg shadow-md p-6 mt-8">

@@ -4,9 +4,14 @@ import axiosInstance from './AxiosInstance';
 import BusCards from './BusCards';
 import Footer from './footer';
 import Navbar from './navbar';
+import { useSelector } from 'react-redux';
+
 
 function BusList() {
     const { fromLocation, toLocation, travelDate,month } = useParams();
+    const userRole = useSelector((state) => state.auth);
+    const jwtToken = userRole?.jwtToken;
+
     // const [isLoading, setIsLoading] = useState(true);
     // const [firstBusTime, setFirstBusTime] = useState(null);
     // const [lastBusTime, setLastBusTime] = useState(null);
@@ -84,7 +89,7 @@ function BusList() {
         }
         console.log("fetchbuses", request);
         // setIsLoading(true);
-        axiosInstance.post('/user/searchbuses', request,{headers:{Authorization:`Bearer ${localStorage.getItem("JWTToken")}`}})
+        axiosInstance.post('/user/searchbuses', request,{headers:{ Authorization: `Bearer ${jwtToken}`}})
             .then((response) => {
                 console.log('response.data',response.data)
                 setBuses(response.data);

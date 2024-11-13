@@ -2,11 +2,16 @@ import React, { useEffect, useState } from 'react';
 import BusComplementory from './BusComplementory';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from './AxiosInstance';
+import { useSelector } from 'react-redux';
+
 
 function BusCards({ BusName, Departure, Duration, Arrival, Fare, SeatsAvailable, BusType, FromLocation, ToLocation, busId,travelDate,complementory,Month }) {
     const [isExpanded, setIsExpanded] = useState(false);
     const [seats, setSeats] = useState([]); // corrected initialization of seats array
     const [selectedSeats, setSelectedSeats] = useState([]);
+    const userRole = useSelector((state) => state.auth);
+    const jwtToken = userRole?.jwtToken;
+
     // const [message, setMessage] = useState('');
     const getSeatsString = () => selectedSeats.join(',');
     const seatsString = getSeatsString();
@@ -40,7 +45,7 @@ console.log(isExpanded)
             console.log('hi',isExpanded);
             const fetchSeats = async () => {
                 try {
-                    const response = await axiosInstance.post('/user/adminGetSeats',{ busId },{headers:{Authorization : `Bearer ${localStorage.getItem("JWTToken")}`}});
+                    const response = await axiosInstance.post('/user/adminGetSeats',{ busId },{headers:{ Authorization: `Bearer ${jwtToken}`}});
                     setSeats(response.data);
                 } catch (error) {
                     console.error('Error fetching seat data:', error);

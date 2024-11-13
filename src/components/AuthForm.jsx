@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import axiosInstance from './AxiosInstance';
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { login } from './Slice';
+import { useSelector } from 'react-redux'
+
 
 function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const [logFormData, setLogFormData] = useState({
     userId:"",   
     password: "",
@@ -42,7 +46,8 @@ function AuthForm() {
     });
   };
 
-
+  const RoleType1 = useSelector((state) => state.auth);
+  console.log('RoleType1',RoleType1)
   const loghandleSubmit = async (e) => {
     e.preventDefault();
 
@@ -52,25 +57,47 @@ function AuthForm() {
 
         console.log('Reservation successful:', response.data);
         const { roleType, userId, jwtToken} = response.data;
+        console.log('response.data',roleType,userId,jwtToken);
         if (userId && roleType && jwtToken ) {
-          localStorage.setItem("UserId", userId);
-          localStorage.setItem("RoleType", roleType);
-          localStorage.setItem("JWTToken", jwtToken);
+          console.log('response.data1',roleType,userId,jwtToken);
+          dispatch(login({ userId, roleType, jwtToken }));
+          console.log('response.data2',roleType,userId,jwtToken);
+          console.log("hi Admin1");
 
-          console.log('hi',localStorage.getItem("UserId"));
-          console.log(localStorage.getItem("RoleType"));
-          console.log(localStorage.getItem("JWTToken"));
+          if(roleType === 'Administrator' )
+          {
+              console.log("hi Admin2");
+                navigate('/AdminHome');
+            }
+            else
+            {
+              console.log("hi User");
+
+
+                navigate('/HomePage');
+            }
+
+
+          localStorage.removeItem('UserId')
+          // localStorage.removeItem('RoleType')
+          // localStorage.removeItem('JWTToken')
+          // console.log('hi',localStorage.getItem("UserId"));
+          // console.log(localStorage.getItem("RoleType"));
+          // console.log(localStorage.getItem("JWTToken"));
+
+
+
+          localStorage.setItem("UserId", userId);
+          // localStorage.setItem("RoleType", roleType);
+          // localStorage.setItem("JWTToken", jwtToken);
+
+
+          // console.log('hi',localStorage.getItem("UserId"));
+          // console.log(localStorage.getItem("RoleType"));
+          // console.log(localStorage.getItem("JWTToken"));
         }
         
-        if(roleType === "Administrator")
-        {
-          console.log("h1")
-            navigate('/AdminHome');
-        }
-        else
-        {
-            navigate('/HomePage');
-        }
+        
 
     } catch (ex) {
         console.error('Error submitting reservation:', ex);
